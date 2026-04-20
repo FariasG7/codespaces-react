@@ -11,36 +11,42 @@ function App() {
   const recognitionRef = useRef(null);
   const wakeLockRef = useRef(null);
 
-  // --- FUNÇÃO DE CLIMA ---
-  const buscarClima = () => {
-    if (!navigator.geolocation) {
-      setClima("GPS não suportado");
+  // --- FUNÇÃO DE CLIMA ---      setClima("GPS não suportado");                );      }
+const buscarClima = () => {
+  setClima("Buscando GPS...");
+  
+  if (!navigator.geolocation) {
+    setClima("GPS não suportado");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const { latitude, longitude } = pos.coords;
+    const API_KEY = "COLE_SUA_CHAVE_AQUI_DENTRO"; // <--- COLOQUE SUA CHAVE AQUI
+
+    if (API_KEY === "COLE_SUA_CHAVE_AQUI_DENTRO") {
+      setClima(`📍 Lat: ${latitude.toFixed(2)} (Sem Chave API)`);
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      const { latitude, longitude } = pos.coords;
-      try {
-        // COLOQUE SUA CHAVE ABAIXO
-        const API_KEY = "5d69641538ee4295a9ffc578b22ad484"; 
-        
-        const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric&lang=pt_br`
-        );
-        const data = await res.json();
-        
-        if (data.main) {
-          setClima(`🌡️ ${Math.round(data.main.temp)}°C | ☁️ ${data.weather[0].description}`);
-        } else {
-          setClima("📍 Localização OK (Sem dados de clima)");
-        }
-      } catch (error) {
-        setClima("Erro ao conectar no Clima");
+    try {
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric&lang=pt_br`
+      );
+      const data = await res.json();
+      if (data.main) {
+        setClima(`🌡️ ${Math.round(data.main.temp)}°C | ☁️ ${data.weather[0].description}`);
+      } else {
+        setClima("Erro nos dados do clima");
       }
-    }, (error) => {
-      setClima("Permita o GPS para ver o clima");
-    });
-  };
+    } catch (error) {
+      setClima("Erro ao conectar no clima");
+    }
+  }, (erro) => {
+    setClima("GPS Negado pelo usuário");
+    console.error(erro);
+  });
+};
 
 
   //
