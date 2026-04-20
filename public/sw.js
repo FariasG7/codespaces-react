@@ -1,17 +1,24 @@
-const CACHE_NAME = 'obra-voz-v1';
+// Mude de 'v1' para 'v2'
+const CACHE_NAME = 'obravoz-v2'; 
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(
+const assets = [
+  './',
+  './index.html',
+  './manifest.json'
+];
+
+self.addEventListener('install', (event) => {
+  // Força o novo Service Worker a assumir o controle imediatamente
+  self.skipWaiting(); 
+  event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(['/', '/index.html']);
+      return cache.addAll(assets);
     })
   );
 });
 
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => {
-      return response || fetch(e.request);
-    })
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
