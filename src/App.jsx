@@ -11,54 +11,37 @@ function App() {
   const recognitionRef = useRef(null);
   const wakeLockRef = useRef(null);
 
-  // --- FUNÇÃO DE CLIMA ---      setClima("GPS não suportado");                );      }
-const buscarClima = () => {
-  setClima("Buscando GPS...");
-  
-  if (!navigator.geolocation) {
-    setClima("GPS não suportado");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(async (pos) => {
-    const { latitude, longitude } = pos.coords;
-    const API_KEY = "COLE_SUA_CHAVE_AQUI_DENTRO"; // <--- COLOQUE SUA CHAVE AQUI
-
-    if (API_KEY === "COLE_SUA_CHAVE_AQUI_DENTRO") {
-      setClima(`📍 Lat: ${latitude.toFixed(2)} (Sem Chave API)`);
+  // --- OBTENÇÃO DO CLIMA ---
+  const buscarClima = () => {
+    if (!navigator.geolocation) {
+      setClima("GPS não suportado");
       return;
     }
 
-    try {
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric&lang=pt_br`
-      );
-      const data = await res.json();
-      if (data.main) {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const { latitude, longitude } = pos.coords;
+      const API_KEY = "5d69641538ee4295a9ffc578b22ad484"; // <-- COLE SUA CHAVE AQUI
+
+      try {
+        const res = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric&lang=pt_br`
+        );
+        
+        if (!res.ok) throw new Error("Erro na API");
+
+        const data = await res.json();
+        // Aqui formatamos o que vai aparecer no topo do app
         setClima(`🌡️ ${Math.round(data.main.temp)}°C | ☁️ ${data.weather[0].description}`);
-      } else {
-        setClima("Erro nos dados do clima");
+      } catch (error) {
+        setClima("Erro ao buscar clima");
+        console.error(error);
       }
-    } catch (error) {
-      setClima("Erro ao conectar no clima");
-    }
-  }, (erro) => {
-    setClima("GPS Negado pelo usuário");
-    console.error(erro);
-  });
-};
+    }, (error) => {
+      setClima("Ative o GPS para o clima");
+      console.error(error);
+    });
+  };
 
-
-  //
-  //useEffect(() => {
-  //  if (navigator.geolocation) {
- //     navigator.geolocation.getCurrentPosition(async (pos) => {
-   //     const { latitude, longitude } = pos.coords;
-   //    // Mock de clima enquanto você não coloca a API Key
-   //     setClima(`📍 Lat: ${latitude.toFixed(2)} | Lon: ${longitude.toFixed(2)}`);
-  //    }, () => setClima("GPS desativado"));
-  //  }
- // }, []);
 
   // --- CONFIGURAÇÃO DE VOZ ---
   useEffect(() => {
