@@ -1,31 +1,41 @@
-.App {
-  text-align: center;
+.container { font-family: sans-serif; background-color: #f0f2f5; min-height: 100vh; padding: 0; margin: 0; }
+.header { background-color: #007AFF; color: white; padding: 20px; text-align: center; }
+.content { padding: 20px; max-width: 500px; margin: 0 auto; }
+.card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.textarea { width: 100%; height: 250px; border: 1px solid #ddd; border-radius: 10px; padding: 12px; font-size: 16px; margin-bottom: 15px; box-sizing: border-box; }
+.btn-main { width: 100%; padding: 18px; border: none; border-radius: 10px; font-size: 18px; color: white; cursor: pointer; transition: 0.3s; }
+.btn-start { background-color: #34C759; }
+.btn-stop { background-color: #FF3B30; }
+.status-label { text-align: center; color: #666; margin-top: 10px; font-size: 14px; }
+.clima-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  display: inline-block;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.info-topo {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #666;
+  font-weight: bold;
+}
+.clima-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  display: inline-block;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-.heart {
-  color: #ff0000;
-}
-
-.small {
-  font-size: 0.75rem;
+.info-topo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #666;
+  font-weight: bold;
 }
