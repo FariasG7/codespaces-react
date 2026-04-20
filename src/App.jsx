@@ -15,6 +15,23 @@ function App() {
   const recognitionRef = useRef(null);
   const wakeLockRef = useRef(null);
 
+  // --- ADICIONAR FOTO VIA CÂMERA (Compatível com mobile) ---
+const selecionarImagem = async (tipo) => {
+  const opcoes = { mediaType: 'photo', quality: 1 };
+  
+  const resultado = tipo === 'camera' 
+    ? await launchCamera(opcoes) 
+    : await launchImageLibrary(opcoes);
+
+  if (resultado.assets) {
+    const uri = resultado.assets[0].uri;
+    // Aqui você envia para o estado ou faz o upload para o servidor
+    setFotoSelecionada(uri);
+  }
+};
+
+
+
   // --- OBTENÇÃO DO CLIMA (Envolvido em useCallback para estabilidade) ---
   const buscarClima = useCallback(() => {
     if (!navigator.geolocation) {
