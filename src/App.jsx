@@ -12,15 +12,47 @@ function App() {
   const wakeLockRef = useRef(null);
 
   // --- FUNÇÃO DE CLIMA ---
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (pos) => {
-        const { latitude, longitude } = pos.coords;
-        // Mock de clima enquanto você não coloca a API Key
-        setClima(`📍 Lat: ${latitude.toFixed(2)} | Lon: ${longitude.toFixed(2)}`);
-      }, () => setClima("GPS desativado"));
+  const buscarClima = () => {
+    if (!navigator.geolocation) {
+      setClima("GPS não suportado");
+      return;
     }
-  }, []);
+
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const { latitude, longitude } = pos.coords;
+      try {
+        // COLOQUE SUA CHAVE ABAIXO
+        const API_KEY = "5d69641538ee4295a9ffc578b22ad484"; 
+        
+        const res = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric&lang=pt_br`
+        );
+        const data = await res.json();
+        
+        if (data.main) {
+          setClima(`🌡️ ${Math.round(data.main.temp)}°C | ☁️ ${data.weather[0].description}`);
+        } else {
+          setClima("📍 Localização OK (Sem dados de clima)");
+        }
+      } catch (error) {
+        setClima("Erro ao conectar no Clima");
+      }
+    }, (error) => {
+      setClima("Permita o GPS para ver o clima");
+    });
+  };
+
+
+  //
+  //useEffect(() => {
+  //  if (navigator.geolocation) {
+ //     navigator.geolocation.getCurrentPosition(async (pos) => {
+   //     const { latitude, longitude } = pos.coords;
+   //    // Mock de clima enquanto você não coloca a API Key
+   //     setClima(`📍 Lat: ${latitude.toFixed(2)} | Lon: ${longitude.toFixed(2)}`);
+  //    }, () => setClima("GPS desativado"));
+  //  }
+ // }, []);
 
   // --- CONFIGURAÇÃO DE VOZ ---
   useEffect(() => {
