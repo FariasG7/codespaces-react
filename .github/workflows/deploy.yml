@@ -1,0 +1,35 @@
+name: Deploy do Diário de Obra
+
+on:
+  push:
+    branches: ["main"] # Ou "master", dependendo da sua branch
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-size: 20
+
+      - name: Instalar e Build
+        run: |
+          npm install
+          npm run build
+
+      - name: Upload para o GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./dist"
+
+      - name: Deploy
+        uses: actions/deploy-pages@v4
