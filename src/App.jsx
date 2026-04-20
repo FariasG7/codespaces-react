@@ -2,60 +2,28 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
-  const [texto, setTexto] = useState('');
+  const [texto, setTexto] = useState(localStorage.getItem('diario_texto') || '');
   const [gravando, setGravando] = useState(false);
-  const [clima, setClima] = useState('Carregando clima...');
-  const [status, setStatus] = useState('Aguardando comando...');
+  const [clima, setClima] = useState('Buscando localização...');
+  const [fotos, setFotos] = useState([]);
+  const [status, setStatus] = useState('Aguardando...');
+  
   const recognitionRef = useRef(null);
   const wakeLockRef = useRef(null);
 
-// 1. Adicione um novo estado para as fotos no topo do componente
-const [fotos, setFotos] = useState([]);
-
-// 2. Função para capturar a imagem
-const tirarFoto = (e) => {
-  const arquivo = e.target.files[0];
-  if (arquivo) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFotos((prev) => [...prev, reader.result]);
-    };
-    reader.readAsDataURL(arquivo);
-  }
-};
-
-
-
-  // --- NOVA FUNÇÃO DE CLIMA ---
-  const buscarClima = () => {
-    if (!navigator.geolocation) {
-      setClima("GPS não suportado");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      const { latitude, longitude } = pos.coords;
-      try {
-        // Exemplo de chamada (Substitua YOUR_API_KEY pela sua chave depois)
-        // Por enquanto, vamos simular a resposta para você ver o visual
-        const API_KEY = "SUA_CHAVE_AQUI"; 
-        if(API_KEY === "SUA_CHAVE_AQUI") {
-           setClima("📍 Localização capturada (Insira a API Key)");
-           return;
-        }
-
-        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric&lang=pt_br`);
-        const data = await res.json();
-        setClima(`🌡️ ${data.main.temp}°C | ☁️ ${data.weather[0].description}`);
-      } catch (error) {
-        setClima("Erro ao buscar clima");
-      }
-    });
-  };
-<h2>clima</h2>
+  // --- FUNÇÃO DE CLIMA ---
   useEffect(() => {
-    buscarClima(); // Busca o clima ao abrir o app
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        // Mock de clima enquanto você não coloca a API Key
+        setClima(`📍 Lat: ${latitude.toFixed(2)} | Lon: ${longitude.toFixed(2)}`);
+      }, () => setClima("GPS desativado"));
+    }
+  }, []);
 
+  // --- CONFIGURAÇÃO DE VOZ ---
+  useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
@@ -69,26 +37,40 @@ const tirarFoto = (e) => {
     }
   }, []);
 
+  // --- SALVAMENTO AUTOMÁTICO ---
+  useEffect(() => {
+    localStorage.setItem('diario_texto', texto);
+  }, [texto]);
+
   const alternarGravacao = async () => {
     if (!gravando) {
       try {
         if ('wakeLock' in navigator) wakeLockRef.current = await navigator.wakeLock.request('screen');
         recognitionRef.current.start();
         setGravando(true);
-        setStatus('🟢 Ouvindo...');
+        setStatus('🟢 Gravando...');
       } catch (err) { setStatus('Erro: ' + err.message); }
     } else {
       recognitionRef.current.stop();
       if (wakeLockRef.current) { wakeLockRef.current.release(); wakeLockRef.current = null; }
       setGravando(false);
-      setStatus('✅ Gravado.');
+      setStatus('✅ Texto guardado.');
+    }
+  };
+
+  const tirarFoto = (e) => {
+    const arquivo = e.target.files[0];
+    if (arquivo) {
+      const reader = new FileReader();
+      reader.onloadend = () => setFotos((prev) => [...prev, reader.result]);
+      reader.readAsDataURL(arquivo);
     }
   };
 
   return (
     <div className="container">
       <header className="header">
-        <h1>🏗️ Diário de Obra</h1>
+        <h1>🏗️ ObraVoz</h1>
         <div className="clima-badge">{clima}</div>
       </header>
 
@@ -96,22 +78,34 @@ const tirarFoto = (e) => {
         <div className="card">
           <div className="info-topo">
             <span>📅 {new Date().toLocaleDateString('pt-BR')}</span>
+            <button onClick={() => {setTexto(''); setFotos([]); localStorage.clear();}} className="btn-limpar">Limpar</button>
           </div>
           
           <textarea
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
-            placeholder="Relate a execução de hoje..."
+            placeholder="Relate a execução..."
             className="textarea"
           />
           
-          <button 
-            onClick={alternarGravacao} 
-            className={`btn-main ${gravando ? 'btn-stop' : 'btn-start'}`}
-          >
-            {gravando ? '🛑 Parar Gravador' : '🎤 Falar Agora'}
-          </button>
+          <div className="acoes">
+            <button onClick={alternarGravacao} className={`btn-main ${gravando ? 'btn-stop' : 'btn-start'}`}>
+              {gravando ? '🛑 Parar' : '🎤 Gravar Voz'}
+            </button>
+
+            <label htmlFor="input-foto" className="btn-foto">
+              📷 Foto
+            </label>
+            <input id="input-foto" type="file" accept="image/*" capture="environment" onChange={tirarFoto} style={{ display: 'none' }} />
+          </div>
+
           <p className="status-label">{status}</p>
+
+          <div className="galeria">
+            {fotos.map((foto, index) => (
+              <img key={index} src={foto} className="foto-preview" alt="Obra" />
+            ))}
+          </div>
         </div>
       </main>
     </div>

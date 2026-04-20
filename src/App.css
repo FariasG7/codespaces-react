@@ -1,41 +1,16 @@
-.container { font-family: sans-serif; background-color: #f0f2f5; min-height: 100vh; padding: 0; margin: 0; }
-.header { background-color: #007AFF; color: white; padding: 20px; text-align: center; }
-.content { padding: 20px; max-width: 500px; margin: 0 auto; }
-.card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.textarea { width: 100%; height: 250px; border: 1px solid #ddd; border-radius: 10px; padding: 12px; font-size: 16px; margin-bottom: 15px; box-sizing: border-box; }
-.btn-main { width: 100%; padding: 18px; border: none; border-radius: 10px; font-size: 18px; color: white; cursor: pointer; transition: 0.3s; }
+.container { font-family: -apple-system, sans-serif; background-color: #f0f2f5; min-height: 100vh; }
+.header { background-color: #007AFF; color: white; padding: 15px; text-align: center; }
+.clima-badge { font-size: 12px; background: rgba(0,0,0,0.1); border-radius: 10px; padding: 4px 10px; margin-top: 5px; display: inline-block; }
+.content { padding: 15px; max-width: 500px; margin: 0 auto; }
+.card { background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.info-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.textarea { width: 100%; height: 200px; border: 1px solid #ddd; border-radius: 10px; padding: 10px; font-size: 16px; box-sizing: border-box; }
+.acoes { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 15px; }
+.btn-main, .btn-foto { border: none; border-radius: 10px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; height: 50px; }
 .btn-start { background-color: #34C759; }
 .btn-stop { background-color: #FF3B30; }
-.status-label { text-align: center; color: #666; margin-top: 10px; font-size: 14px; }
-.clima-badge {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  margin-top: 10px;
-  display: inline-block;
-}
-
-.info-topo {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  color: #666;
-  font-weight: bold;
-}
-.clima-badge {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  margin-top: 10px;
-  display: inline-block;
-}
-
-.info-topo {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  color: #666;
-  font-weight: bold;
-}
+.btn-foto { background-color: #5856D6; }
+.btn-limpar { background: none; border: none; color: #FF3B30; font-size: 12px; cursor: pointer; }
+.galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 15px; }
+.foto-preview { width: 100%; height: 80px; object-fit: cover; border-radius: 5px; }
+.status-label { text-align: center; font-size: 12px; color: #999; margin-top: 10px; }
