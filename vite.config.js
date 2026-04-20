@@ -3,5 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: './', // Isso garante que os arquivos sejam encontrados no GitHub Pages
+  // Se o seu repositório for "diario-obra", coloque o nome dele entre as barras:
+  // Se não tiver certeza, use './' que funciona na maioria dos casos
+  base: './', 
 })
