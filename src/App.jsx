@@ -30,6 +30,21 @@ const selecionarImagem = async (tipo) => {
   }
 };
 
+const botao = document.getElementById('upload-button');
+const input = document.getElementById('foto-input');
+
+botao.addEventListener('click', () => {
+    input.click(); // Dispara o seletor de arquivos
+});
+
+input.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+        console.log("Arquivo selecionado:", this.files[0].name);
+        // Aqui você pode chamar uma função para mostrar um preview da imagem
+    }
+});
+
+
 
 
   // --- OBTENÇÃO DO CLIMA (Envolvido em useCallback para estabilidade) ---
