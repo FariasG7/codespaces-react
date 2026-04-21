@@ -115,7 +115,6 @@ function App() {
     }
 
     try {
-        const { jsPDF } = require("jspdf"); // Importação dinâmica ou use import no topo
         const doc = new jsPDF();
         
         // Design do PDF
