@@ -1,3 +1,4 @@
+import { jsPDF } from "jspdf";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 
@@ -202,3 +203,4 @@ function App() {
     </div>
   );
 }
+export default App;
