@@ -106,7 +106,7 @@ function App() {
     reader.readAsDataURL(arquivo);
   };
 
-
+};
   const finalizarEGerarPDF = () => {
     // Verificação básica
     if (!texto && fotos.length === 0) {
@@ -201,5 +201,4 @@ function App() {
       </main>
     </div>
   );
-}
 export default App;
