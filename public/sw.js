@@ -1,3 +1,5 @@
+import { jsPDF } from "jspdf";
+
 // Mude de 'v1' para 'v2'
 const CACHE_NAME = 'obravoz-v2'; 
 
@@ -23,7 +25,6 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-import { jsPDF } from "jspdf";
 
 // ... dentro do seu componente App ...
 
