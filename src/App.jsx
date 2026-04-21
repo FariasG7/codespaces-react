@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 
 function App() {
-  const [texto, setTexto] = useState(localStorage.getItem('diario_texto') || '');
+  const [texto, setTexto] = useState(() => localStorage.getItem('diario_texto') || '');
   const [gravando, setGravando] = useState(false);
   const [clima, setClima] = useState('Buscando localização...');
-  // Carrega fotos do localStorage se existirem
   const [fotos, setFotos] = useState(() => {
     const saved = localStorage.getItem('diario_fotos');
     return saved ? JSON.parse(saved) : [];
@@ -15,91 +14,50 @@ function App() {
   const recognitionRef = useRef(null);
   const wakeLockRef = useRef(null);
 
-  // --- ADICIONAR FOTO VIA CÂMERA (Compatível com mobile) ---
-const selecionarImagem = async (tipo) => {
-  const opcoes = { mediaType: 'photo', quality: 1 };
-  
-  const resultado = tipo === 'camera' 
-    ? await launchCamera(opcoes) 
-    : await launchImageLibrary(opcoes);
-
-  if (resultado.assets) {
-    const uri = resultado.assets[0].uri;
-    // Aqui você envia para o estado ou faz o upload para o servidor
-    setFotoSelecionada(uri);
-  }
-};
-
-const botao = document.getElementById('upload-button');
-const input = document.getElementById('foto-input');
-
-botao.addEventListener('click', () => {
-    input.click(); // Dispara o seletor de arquivos
-});
-
-input.addEventListener('change', function() {
-    if (this.files && this.files[0]) {
-        console.log("Arquivo selecionado:", this.files[0].name);
-        // Aqui você pode chamar uma função para mostrar um preview da imagem
-    }
-});
-
-
-
-
-  // --- OBTENÇÃO DO CLIMA (Envolvido em useCallback para estabilidade) ---
-  const buscarClima = useCallback(() => {
-    if (!navigator.geolocation) {
-      setClima("GPS não suportado");
-      return;
-    }
+  // --- BUSCA DE CLIMA ---
+  const buscarClima = useCallback(async () => {
+    if (!navigator.geolocation) return setClima("GPS não suportado");
 
     navigator.geolocation.getCurrentPosition(async (pos) => {
       const { latitude, longitude } = pos.coords;
       const API_KEY = "5d69641538ee4295a9ffc578b22ad484"; 
-
       try {
         const res = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric&lang=pt_br`
         );
-        
-        if (!res.ok) throw new Error("Erro na API");
-
+        if (!res.ok) throw new Error();
         const data = await res.json();
-        setClima(`🌡️ ${Math.round(data.main.temp)}°C | ☁️ ${data.weather[0].description}`);
-      } catch (error) {
-        setClima("Erro ao buscar clima");
+        setClima(`🌡️ ${Math.round(data.main.temp)}°C | ${data.weather[0].description}`);
+      } catch {
+        setClima("Clima indisponível");
       }
-    }, () => {
-      setClima("Ative o GPS para o clima");
-    });
+    }, () => setClima("GPS desligado"));
   }, []);
 
-  // --- EFEITO INICIAL ---
+  // --- CONFIGURAÇÃO DO RECOGNITION ---
   useEffect(() => {
-    buscarClima(); // Busca o clima ao iniciar
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
+    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (Speech) {
+      const recognition = new Speech();
       recognition.lang = 'pt-BR';
       recognition.continuous = true;
-      recognition.interimResults = false; // Garante apenas resultados finais
+      recognition.interimResults = false;
 
       recognition.onresult = (event) => {
         const transcript = event.results[event.results.length - 1][0].transcript;
         setTexto((prev) => prev + (prev.length > 0 ? ' ' : '') + transcript);
       };
 
+      recognition.onend = () => setGravando(false); // Garante que o estado resete se o browser parar
+
       recognition.onerror = (event) => {
-        setStatus(`Erro voz: ${event.error}`);
+        setStatus(`Erro: ${event.error}`);
         setGravando(false);
       };
 
       recognitionRef.current = recognition;
-    } else {
-      setStatus('Voz não suportada neste navegador');
     }
+    buscarClima();
   }, [buscarClima]);
 
   // --- PERSISTÊNCIA ---
@@ -108,55 +66,43 @@ input.addEventListener('change', function() {
   }, [texto]);
 
   useEffect(() => {
-    localStorage.setItem('diario_fotos', JSON.stringify(fotos));
+    // Alerta: localStorage é limitado para fotos. Ideal usar IndexedDB futuramente.
+    try {
+      localStorage.setItem('diario_fotos', JSON.stringify(fotos));
+    } catch (e) {
+      setStatus("Erro: Memória cheia para fotos!");
+    }
   }, [fotos]);
 
+  // --- AÇÕES ---
   const alternarGravacao = async () => {
-    if (!recognitionRef.current) {
-      setStatus('Reconhecimento de voz indisponível.');
-      return;
-    }
+    if (!recognitionRef.current) return;
 
     if (!gravando) {
       try {
-        if ('wakeLock' in navigator) {
-          wakeLockRef.current = await navigator.wakeLock.request('screen');
-        }
+        if ('wakeLock' in navigator) wakeLockRef.current = await navigator.wakeLock.request('screen');
         recognitionRef.current.start();
         setGravando(true);
         setStatus('🟢 Gravando...');
-      } catch (err) { 
-        setStatus('Erro: ' + err.message); 
-      }
+      } catch (err) { setStatus('Erro ao iniciar'); }
     } else {
       recognitionRef.current.stop();
-      if (wakeLockRef.current) { 
-        wakeLockRef.current.release(); 
-        wakeLockRef.current = null; 
-      }
+      wakeLockRef.current?.release();
       setGravando(false);
-      setStatus('✅ Texto guardado.');
+      setStatus('✅ Salvo.');
     }
   };
 
-  const tirarFoto = (e) => {
+  const handleFoto = (e) => {
     const arquivo = e.target.files[0];
-    if (arquivo) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFotos((prev) => [...prev, reader.result]);
-      };
-      reader.readAsDataURL(arquivo);
-    }
-  };
+    if (!arquivo) return;
 
-  const limparTudo = () => {
-    if(window.confirm("Deseja apagar todo o relato e fotos?")) {
-      setTexto('');
-      setFotos([]);
-      localStorage.clear();
-      setStatus('Aguardando...');
-    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      // Dica: Aqui você poderia implementar um resize com Canvas antes de salvar
+      setFotos((prev) => [...prev, reader.result]);
+    };
+    reader.readAsDataURL(arquivo);
   };
 
   return (
@@ -168,46 +114,37 @@ input.addEventListener('change', function() {
 
       <main className="content">
         <div className="card">
-          <div className="info-topo">
-            <span>📅 {new Date().toLocaleDateString('pt-BR')}</span>
-            <button onClick={limparTudo} className="btn-limpar">Limpar</button>
-          </div>
-          
           <textarea
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
-            placeholder="Relate a execução da obra..."
+            placeholder="Relate o que foi feito hoje..."
             className="textarea"
           />
           
           <div className="acoes">
-            <button 
-              onClick={alternarGravacao} 
-              className={`btn-main ${gravando ? 'btn-stop' : 'btn-start'}`}
-            >
-              {gravando ? '🛑 Parar Gravação' : '🎤 Gravar Voz'}
+            <button onClick={alternarGravacao} className={`btn-main ${gravando ? 'btn-stop' : 'btn-start'}`}>
+              {gravando ? '🛑 Parar' : '🎤 Voz'}
             </button>
 
-            <label htmlFor="input-foto" className="btn-foto">
+            {/* Substituído o seletor manual pelo Label que é o padrão React/HTML */}
+            <label className="btn-foto">
               📷 Foto
+              <input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
             </label>
-            <input 
-              id="input-foto" 
-              type="file" 
-              accept="image/*" 
-              capture="environment" 
-              onChange={tirarFoto} 
-              style={{ display: 'none' }} 
-            />
           </div>
 
-          <p className={`status-label ${gravando ? 'pulsar' : ''}`}>{status}</p>
+        <div className="acoes-finalizacao">
+          <button onClick={finalizarEGerarPDF} className="btn-finalizar">
+            📂 Finalizar e Gerar PDF
+          </button>
+        </div>
+
+
+          <p className="status-label">{status}</p>
 
           <div className="galeria">
-            {fotos.map((foto, index) => (
-              <div key={index} className="foto-container">
-                <img src={foto} className="foto-preview" alt={`Obra ${index}`} />
-              </div>
+            {fotos.map((foto, i) => (
+              <img key={i} src={foto} className="foto-preview" alt="Obra" />
             ))}
           </div>
         </div>
@@ -215,5 +152,3 @@ input.addEventListener('change', function() {
     </div>
   );
 }
-
-export default App;
