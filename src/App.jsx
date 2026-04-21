@@ -105,6 +105,56 @@ function App() {
     reader.readAsDataURL(arquivo);
   };
 
+
+  const finalizarEGerarPDF = () => {
+    // Verificação básica
+    if (!texto && fotos.length === 0) {
+        setStatus("⚠️ Adicione um relato ou foto primeiro.");
+        return;
+    }
+
+    try {
+        const { jsPDF } = require("jspdf"); // Importação dinâmica ou use import no topo
+        const doc = new jsPDF();
+        
+        // Design do PDF
+        doc.setFont("helvetica", "bold");
+        doc.text("RELATÓRIO DIÁRIO DE OBRA", 105, 20, { align: "center" });
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 35);
+        doc.text(`Clima: ${clima}`, 20, 42);
+        
+        doc.line(20, 45, 190, 45); // Linha divisória
+
+        // Relato
+        doc.setFontSize(12);
+        doc.text("Relato da Execução:", 20, 55);
+        const splitTexto = doc.splitTextToSize(texto, 170);
+        doc.text(splitTexto, 20, 65);
+
+        // Fotos
+        if (fotos.length > 0) {
+            doc.addPage();
+            doc.text("Anexos Fotográficos:", 20, 20);
+            fotos.forEach((foto, index) => {
+                const yPos = 30 + (index * 70);
+                if (yPos < 250) {
+                    doc.addImage(foto, 'JPEG', 20, yPos, 80, 60);
+                }
+            });
+        }
+
+        doc.save(`diario_${new Date().getTime()}.pdf`);
+        setStatus("✅ PDF Gerado com sucesso!");
+    } catch (error) {
+        console.error(error);
+        setStatus("❌ Erro ao gerar PDF. Verifique a biblioteca jspdf.");
+    }
+};
+
+
   return (
     <div className="container">
       <header className="header">

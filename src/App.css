@@ -1,18 +1,28 @@
 /* Paleta Dark: Fundo Escuro, Botões Verdes, Letras Azuis */
 
+/* Reset básico para mobile */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
 .container { 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-    background-color: #121212; /* Fundo mais escuro */
-    color: #4A90E2; /* Letras azuis (padrão para o corpo) */
+    background-color: #121212; 
+    color: #4A90E2; 
     min-height: 100vh; 
+    padding-bottom: 30px; /* Espaço extra no final */
 }
 
 .header { 
     background-color: #1A1A1A; 
-    color: #007AFF; /* Título em azul */
+    color: #007AFF; 
     padding: 15px; 
     text-align: center; 
     border-bottom: 1px solid #333;
+    position: sticky; /* Mantém o topo visível ao rolar */
+    top: 0;
+    z-index: 10;
 }
 
 .clima-badge { 
@@ -48,78 +58,102 @@
 
 .textarea { 
     width: 100%; 
-    height: 200px; 
+    height: 180px; 
     background-color: #252525;
-    border: 1px solid #333; 
+    border: 2px solid #333; /* Borda levemente mais grossa */
     border-radius: 10px; 
-    padding: 10px; 
+    padding: 12px; 
     font-size: 16px; 
-    box-sizing: border-box; 
-    color: #4A90E2; /* Texto digitado em azul */
+    color: #4A90E2;
+    resize: none; /* Bloqueia o redimensionamento manual */
+    transition: border-color 0.2s;
 }
 
-.textarea::placeholder {
-    color: #355B85; /* Azul mais escuro para o placeholder */
+.textarea:focus {
+    border-color: #4A90E2;
+    outline: none;
 }
 
 .acoes { 
     display: grid; 
-    grid-template-columns: 2fr 1fr; 
-    gap: 10px; 
+    grid-template-columns: 1fr 1fr; /* Dividi 50/50 para botões maiores no toque */
+    gap: 12px; 
     margin-top: 15px; 
 }
 
-/* Botões Verdes */
-.btn-main, .btn-foto { 
+.btn-main, .btn-foto, .btn-finalizar { 
     border: none; 
-    border-radius: 10px; 
-    color: #121212; /* Texto escuro no botão para contraste */
-    font-size: 16px; 
+    border-radius: 12px; 
+    color: #000; /* Texto preto para contraste no verde */
+    font-size: 15px; 
     font-weight: bold; 
     cursor: pointer; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    height: 50px; 
-    transition: opacity 0.2s;
+    height: 55px; /* Um pouco mais alto para o polegar */
+    transition: transform 0.1s, filter 0.2s;
 }
 
-.btn-start { background-color: #2ECC71; } /* Verde vibrante */
-.btn-stop { background-color: #27AE60; }  /* Verde mais fechado */
-.btn-foto { background-color: #00FF7F; }  /* Verde primavera */
+.btn-start { background-color: #2ECC71; }
+.btn-stop { 
+    background-color: #E74C3C !important; /* Vermelho ao parar para alerta */
+    color: white;
+} 
+.btn-foto { background-color: #00FF7F; }
 
-.btn-main:active, .btn-foto:active {
-    opacity: 0.8;
+/* Botão de Finalizar */
+.btn-finalizar {
+    width: 100%;
+    margin-top: 15px;
+    background-color: #4A90E2;
+    color: white;
+}
+
+.btn-main:active, .btn-foto:active, .btn-finalizar:active {
+    transform: scale(0.96);
+    filter: brightness(0.8);
 }
 
 .btn-limpar { 
-    background: none; 
+    background: rgba(231, 76, 60, 0.1); 
     border: none; 
-    color: #5DADE2; /* Azul claro para ação secundária */
-    font-size: 12px; 
-    cursor: pointer; 
-    text-transform: uppercase;
+    color: #E74C3C; 
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 11px; 
+    font-weight: bold;
 }
 
 .galeria { 
     display: grid; 
     grid-template-columns: repeat(3, 1fr); 
-    gap: 8px; 
-    margin-top: 15px; 
+    gap: 10px; 
+    margin-top: 20px; 
 }
 
 .foto-preview { 
     width: 100%; 
-    height: 80px; 
+    aspect-ratio: 1 / 1; /* Mantém a foto sempre quadrada */
     object-fit: cover; 
-    border-radius: 8px; 
-    border: 1px solid #333;
+    border-radius: 10px; 
+    border: 2px solid #333;
+}
+
+/* Animação de Pulsar quando estiver gravando */
+@keyframes pulsar {
+    0% { box-shadow: 0 0 0 0px rgba(231, 76, 60, 0.4); }
+    100% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+}
+
+.btn-stop {
+    animation: pulsar 1.5s infinite;
 }
 
 .status-label { 
     text-align: center; 
-    font-size: 12px; 
+    font-size: 13px; 
     color: #4A90E2; 
-    margin-top: 10px; 
-    opacity: 0.7;
+    margin-top: 15px; 
+    font-weight: 500;
 }

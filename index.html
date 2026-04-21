@@ -2,36 +2,18 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diário de Obra Voz</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>ObraVoz - Diário de Obra</title>
+    
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png">
     <meta name="theme-color" content="#007AFF">
+    <meta name="description" content="Diário de obra inteligente com comando de voz">
 </head>
 <body>
+    <noscript>Você precisa ativar o JavaScript para rodar este aplicativo.</noscript>
+    
+    <div id="root"></div>
 
-<header>
-    <h1>🏗️ Diário de Obra</h1>
-</header>
-
-<main class="container">
-    <section id="weather" class="weather-box" aria-live="polite">
-        <span class="loader"></span> Obtendo clima atual...
-    </section>
-
-    <div class="card">
-        <textarea id="relato" placeholder="Toque no botão e comece a falar o que foi executado hoje..."></textarea>
-        
-        <div class="actions">
-            <input type="file" id="foto-input" accept="image/*" hidden>
-            <button id="upload-button" class="btn-secondary">📸 Adicionar Foto</button>
-            <button id="btnVoice" class="btn-primary">🎤 Iniciar Relato</button>
-        </div>
-        
-        <div id="status" class="status">Aguardando comando...</div>
-    </div>
-</main>
-
-<script src="app.js"></script>
 </body>
 </html>
