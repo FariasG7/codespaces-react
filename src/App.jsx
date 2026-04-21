@@ -106,7 +106,7 @@ function App() {
     reader.readAsDataURL(arquivo);
   };
 
-};
+
   const finalizarEGerarPDF = () => {
     // Verificação básica
     if (!texto && fotos.length === 0) {
@@ -148,11 +148,11 @@ function App() {
 
         doc.save(`diario_${new Date().getTime()}.pdf`);
         setStatus("✅ PDF Gerado com sucesso!");
-    } catch (error) {
+        } catch (error) {
         console.error(error);
         setStatus("❌ Erro ao gerar PDF. Verifique a biblioteca jspdf.");
     }
-};
+  }
 
 
   return (
@@ -201,4 +201,5 @@ function App() {
       </main>
     </div>
   );
+}
 export default App;
