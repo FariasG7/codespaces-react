@@ -162,7 +162,22 @@ function App() {
 
         doc.save(`diario_${new Date().getTime()}.pdf`);
         setStatus("✅ PDF Gerado com sucesso!");
-        } catch (error) {
+      
+         // Usamos um pequeno atraso (timeout) ou confirmação para não resetar na cara do usuário
+        setTimeout(() => {
+            if (window.confirm("Deseja limpar os campos para iniciar um novo relatório?")) {
+                setTexto("");          // Limpa o texto do relato
+                setFotos([]);          // Esvazia o array de fotos
+                setClima("Ensolarado"); // Reseta para o valor padrão (se houver)
+                setStatus("📝 Campos prontos para novo relato.");
+                
+                // Se houver inputs de arquivo (input type="file"), reseta manualmente:
+                const inputFoto = document.getElementById('input-foto');
+                if (inputFoto) inputFoto.value = "";
+            }
+        }, 500);
+      
+      } catch (error) {
         console.error(error);
         setStatus("❌ Erro ao gerar PDF. Verifique a biblioteca jspdf.");
     }
