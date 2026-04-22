@@ -28,7 +28,21 @@ function App() {
         );
         if (!res.ok) throw new Error();
         const data = await res.json();
-        setClima(`🌡️ ${Math.round(data.main.temp)}°C | ${data.weather[0].description}`);
+        const iconesClima = {
+         Clear: "☀️",
+         Clouds: "☁️",
+         Rain: "🌧️",
+         Thunderstorm: "⛈️",
+         Snow: "❄️",
+         Drizzle: "🌦️",
+         Mist: "🌫️",
+         Default: "🌡️" // Caso não encontre correspondência
+        };
+
+      const condicao = data.weather[0].main; // Ex: "Clear", "Clouds", etc.
+      const icone = iconesClima[condicao] || iconesClima.Default;
+
+      setClima(`${icone} ${Math.round(data.main.temp)}°C | ${data.weather[0].description}`);
       } catch {
         setClima("Clima indisponível");
       }
