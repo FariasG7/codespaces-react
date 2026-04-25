@@ -4,6 +4,11 @@ import './App.css';
 import { FaMicrophone, FaCamera, FaPaperclip } from 'react-icons/fa';
 
 function App() {
+  // --- ESTADO DE AUTENTICAÇÃO ---
+  const [logado, setLogado] = useState(false);
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+
   const [texto, setTexto] = useState(() => localStorage.getItem('diario_texto') || '');
   const [gravando, setGravando] = useState(false);
   const [clima, setClima] = useState('Buscando localização...');
@@ -20,7 +25,19 @@ function App() {
   const recognitionRef = useRef(null);
   const wakeLockRef = useRef(null);
 
-  // --- FUNÇÕES DE MANIPULAÇÃO DAS TABELAS ---
+  // --- FUNÇÃO DE LOGIN ---
+  const manipularLogin = (e) => {
+    e.preventDefault();
+    // Aqui você pode adicionar sua lógica de validação (Firebase, API, etc)
+    if (email !== "" && senha !== "") {
+      setLogado(true);
+    } else {
+      alert("Preencha os campos para entrar.");
+    }
+  };
+
+  // --- RESTANTE DAS SUAS FUNÇÕES (buscarClima, alternarGravacao, PDF...) ---
+  // [Mantenha as funções adicionarLinhaCofragem, adicionarLinhaBetao, buscarClima, etc., como estavam]
   const adicionarLinhaCofragem = () => setLinhasCofragem([...linhasCofragem, { peca: '', largura: '', altura: '', comprimento: '' }]);
   const adicionarLinhaBetao = () => setLinhasBetao([...linhasBetao, { elemento: '', largura: '', altura: '', comprimento: '' }]);
 
@@ -36,7 +53,6 @@ function App() {
     }
   };
 
-  // --- BUSCA DE CLIMA ---
   const buscarClima = useCallback(async () => {
     if (!navigator.geolocation) return setClima("GPS não suportado");
     navigator.geolocation.getCurrentPosition(async (pos) => {
@@ -54,7 +70,6 @@ function App() {
     }, () => setClima("GPS desligado"));
   }, []);
 
-  // --- RECOGNITION ---
   useEffect(() => {
     const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (Speech) {
@@ -68,10 +83,9 @@ function App() {
       recognition.onend = () => setGravando(false);
       recognitionRef.current = recognition;
     }
-    buscarClima();
-  }, [buscarClima]);
+    if(logado) buscarClima(); // Só busca clima se logar
+  }, [buscarClima, logado]);
 
-  // --- PERSISTÊNCIA ---
   useEffect(() => { localStorage.setItem('diario_texto', texto); }, [texto]);
   useEffect(() => { localStorage.setItem('diario_fotos', JSON.stringify(fotos)); }, [fotos]);
 
@@ -100,40 +114,31 @@ function App() {
     reader.readAsDataURL(arquivo);
   };
 
-  // --- GERAR PDF ---
   const finalizarEGerarPDF = () => {
     try {
       const doc = new jsPDF();
       doc.setFont("helvetica", "bold");
       doc.text("RELATÓRIO DIÁRIO DE OBRA", 105, 20, { align: "center" });
-
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
       const climaLimpo = clima.replace(/[^\x00-\x7F]/g, "").trim();
       doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 190, 35, { align: "right" });
       doc.text(`Clima: ${climaLimpo}`, 20, 35);
-
       doc.line(20, 40, 190, 40);
-
       doc.setFontSize(12);
       doc.text("Relato da Execução:", 20, 50);
       const splitTexto = doc.splitTextToSize(texto || "Nenhum relato informado.", 170);
       doc.text(splitTexto, 20, 60);
-
-      // Cálculos
       let totalCofragem = 0;
       linhasCofragem.forEach(l => totalCofragem += (Number(l.largura) || 0) * (Number(l.altura) || 0) * (Number(l.comprimento) || 0));
-      
       let totalBetao = 0;
       linhasBetao.forEach(l => totalBetao += (Number(l.largura) || 0) * (Number(l.altura) || 0) * (Number(l.comprimento) || 0));
-
       let yPosCalculos = 100;
       doc.setFont("helvetica", "bold");
       doc.text("Resumo de Quantidades:", 20, yPosCalculos);
       doc.setFont("helvetica", "normal");
       doc.text(`Total Cofragem Estimada: ${totalCofragem.toFixed(2)} m2`, 20, yPosCalculos + 10);
       doc.text(`Total Betão Estimado: ${totalBetao.toFixed(2)} m3`, 20, yPosCalculos + 20);
-
       if (fotos.length > 0) {
         doc.addPage();
         doc.text("Anexos Fotográficos:", 20, 20);
@@ -142,7 +147,6 @@ function App() {
           if (yImg < 250) doc.addImage(foto, 'JPEG', 20, yImg, 80, 60);
         });
       }
-
       doc.save(`relatorio_${new Date().getTime()}.pdf`);
       setStatus("✅ PDF Gerado!");
     } catch (error) {
@@ -151,6 +155,35 @@ function App() {
     }
   };
 
+  // --- TELA DE LOGIN ---
+  if (!logado) {
+    return (
+      <div className="login-container" style={{
+        height: '100vh', display: 'flex', flexDirection: 'column', 
+        justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212', color: 'white'
+      }}>
+        <h1 style={{ marginBottom: '20px' }}>🏗️ ObraVoz</h1>
+        <form onSubmit={manipularLogin} style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '80%' }}>
+          <input 
+            type="email" placeholder="E-mail" required 
+            style={{ padding: '15px', borderRadius: '8px', border: 'none' }}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input 
+            type="password" placeholder="Senha" required 
+            style={{ padding: '15px', borderRadius: '8px', border: 'none' }}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+          <button type="submit" style={{
+            padding: '15px', borderRadius: '8px', border: 'none', 
+            backgroundColor: '#007bff', color: 'white', fontWeight: 'bold', cursor: 'pointer'
+          }}>Entrar</button>
+        </form>
+      </div>
+    );
+  }
+
+  // --- TELA PRINCIPAL (SÓ APARECE SE LOGADO) ---
   return (
     <div className="container">
       <header className="header">
@@ -162,7 +195,6 @@ function App() {
         <div className="card">
           <textarea value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Relato de execução..." className="textarea" />
 
-          {/* TABELAS FORA DA DIV ACOES */}
           <div className="card-tabelas" style={{ padding: '0 20px', color: '#fff' }}>
             <h3>📐 Cofragem (m²)</h3>
             <table style={{ width: '100%' }}>
@@ -197,7 +229,6 @@ function App() {
             <button onClick={adicionarLinhaBetao} className="btn-add">+ Linha</button>
           </div>
 
-          {/* BOTÕES DE AÇÃO (LADO A LADO) */}
           <div className="acoes" style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '20px' }}>
             <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
               <i>{gravando ? <FaMicrophone style={{ color: 'red' }} /> : <FaMicrophone />}</i>
@@ -214,6 +245,7 @@ function App() {
 
           <div className="acoes-finalizacao">
             <button onClick={finalizarEGerarPDF} className="btn-finalizar">📂 Gerar PDF</button>
+            <button onClick={() => setLogado(false)} style={{marginTop: '10px', background: 'none', color: '#888', border: 'none'}}>Sair</button>
           </div>
           <p className="status-label">{status}</p>
           <div className="galeria">
