@@ -200,6 +200,11 @@ function App() {
 
   
         {/* Botão de Voz - Efeito Fill */}
+<button className="icon icon-fill">
+  <span className="material-symbols-outlined">mic</span>
+</button>
+
+        
        <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
         <i className="fas fa-microphone"></i>
        </button>
