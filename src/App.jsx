@@ -138,16 +138,29 @@ function App() {
       doc.text("Relato da Execução:", 20, 50);
       const splitTexto = doc.splitTextToSize(texto || "Nenhum relato informado.", 170);
       doc.text(splitTexto, 20, 60);
-      let totalCofragem = 0;
-      linhasCofragem.forEach(l => totalCofragem += (Number(l.largura) || 0) * (Number(l.altura) || 0) * (Number(l.comprimento) || 0));
-      let totalBetao = 0;
-      linhasBetao.forEach(l => totalBetao += (Number(l.largura) || 0) * (Number(l.altura) || 0) * (Number(l.comprimento) || 0));
-      let yPosCalculos = 100;
-      doc.setFont("helvetica", "bold");
-      doc.text("Resumo de Quantidades:", 20, yPosCalculos);
-      doc.setFont("helvetica", "normal");
-      doc.text(`Total Cofragem Estimada: ${totalCofragem.toFixed(2)} m2`, 20, yPosCalculos + 10);
-      doc.text(`Total Betão Estimado: ${totalBetao.toFixed(2)} m3`, 20, yPosCalculos + 20);
+      // --- CÁLCULO INTELIGENTE ---
+let totalCofragem = 0;
+linhasCofragem.forEach(l => {
+  const L = Number(l.largura) || 0;
+  const A = Number(l.altura) || 0;
+  const C = Number(l.comprimento) || 0;
+
+  if (A > 0 && L > 0 && C > 0) {
+    // Se tem as 3 medidas e é um pilar/viga: Perímetro x Comprimento
+    // Ex: Pilar de 0.20x0.30 com 2.5m de altura -> (0.2+0.2+0.3+0.3) * 2.5
+    totalCofragem += (2 * L + 2 * A) * C;
+  } else if (L > 0 && C > 0) {
+    // Se não tem altura (A=0), assume-se que é uma LAJE: Largura x Comprimento
+    totalCofragem += L * C;
+  }
+});
+
+let totalBetao = 0;
+linhasBetao.forEach(l => {
+  // Betão é sempre volume: L x A x C
+  totalBetao += (Number(l.largura) || 0) * (Number(l.altura) || 0) * (Number(l.comprimento) || 0);
+});
+
       if (fotos.length > 0) {
         doc.addPage();
         doc.text("Anexos Fotográficos:", 20, 20);
