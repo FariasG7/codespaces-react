@@ -160,3 +160,29 @@
     animation: pulsar 1.5s infinite;
     background-color: #E74C3C !important;
 }
+
+/* Garante que o ícone apareça e fique centralizado */
+.icon i {
+  position: relative;
+  display: flex;         /* Adicionado */
+  align-items: center;   /* Adicionado */
+  justify-content: center; /* Adicionado */
+  color: #ffffff;        /* Branco puro */
+  font-size: 22px;       /* Tamanho do ícone */
+  z-index: 2;
+  font-style: normal;
+}
+
+/* Remove qualquer borda ou fundo padrão do botão que possa atrapalhar */
+button.icon {
+  border: none;
+  background: none;
+  padding: 0;
+  outline: none;
+}
+
+/* Ajuste do efeito Expand para não esconder o ícone */
+.icon-expand::before {
+  background: var(--red);
+  box-shadow: inset 0 0 0 var(--icon-size) #1e1e1e; /* Cor do fundo do seu card */
+}
