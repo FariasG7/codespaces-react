@@ -2,7 +2,7 @@
 import { jsPDF } from "jspdf"; 
 
 // ... restante do componente ...
-
+const CACHE_NAME='obravoz-v3';
 const finalizarEGerarPDF = () => {
   if (!texto && fotos.length === 0) {
     alert("O diário está vazio!");
