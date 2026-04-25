@@ -26,20 +26,7 @@ function App() {
     return saved ? JSON.parse(saved) : [{ elemento: '', largura: '', altura: '', comprimento: '' }];
   });
 
-  // --- EFEITOS DE PERSISTÊNCIA (SALVAMENTO AUTOMÁTICO) ---
-  useEffect(() => {
-    localStorage.setItem('app_logado', logado);
-  }, [logado]);
 
-  useEffect(() => {
-    localStorage.setItem('diario_texto', texto);
-    localStorage.setItem('diario_fotos', JSON.stringify(fotos));
-    localStorage.setItem('diario_cofragem', JSON.stringify(linhasCofragem));
-    localStorage.setItem('diario_betao', JSON.stringify(linhasBetao));
-  }, [texto, fotos, linhasCofragem, linhasBetao]);
-
-
-  
 const limparDadosDiario = () => {
   // Reseta os estados para o valor inicial
   setTexto('');
@@ -125,6 +112,20 @@ const limparDadosDiario = () => {
 
   useEffect(() => { localStorage.setItem('diario_texto', texto); }, [texto]);
   useEffect(() => { localStorage.setItem('diario_fotos', JSON.stringify(fotos)); }, [fotos]);
+    // --- EFEITOS DE PERSISTÊNCIA (SALVAMENTO AUTOMÁTICO) ---
+  useEffect(() => {
+    localStorage.setItem('app_logado', logado);
+  }, [logado]);
+
+  useEffect(() => {
+    localStorage.setItem('diario_texto', texto);
+    localStorage.setItem('diario_fotos', JSON.stringify(fotos));
+    localStorage.setItem('diario_cofragem', JSON.stringify(linhasCofragem));
+    localStorage.setItem('diario_betao', JSON.stringify(linhasBetao));
+  }, [texto, fotos, linhasCofragem, linhasBetao]);
+
+
+  
 
   const alternarGravacao = async () => {
     if (!recognitionRef.current) return;
