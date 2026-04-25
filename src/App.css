@@ -76,6 +76,17 @@
   --orange: #EB9532;
 }
 
+.icon i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF; /* Branco puro como na imagem */
+  font-size: 22px; /* Tamanho proporcional ao seu botão de 45px */
+  font-style: normal;
+  z-index: 2;
+}
+
+
 .icon {
   cursor: pointer;
   position: relative;
