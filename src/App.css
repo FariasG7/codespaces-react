@@ -1,6 +1,4 @@
-/* Paleta Dark: Fundo Escuro, Botões Verdes, Letras Azuis */
-
-/* Reset básico para mobile */
+/* Reset e Container */
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -11,7 +9,7 @@
     background-color: #121212; 
     color: #4A90E2; 
     min-height: 100vh; 
-    padding-bottom: 30px; /* Espaço extra no final */
+    padding-bottom: 30px; 
 }
 
 .header { 
@@ -20,7 +18,7 @@
     padding: 15px; 
     text-align: center; 
     border-bottom: 1px solid #333;
-    position: sticky; /* Mantém o topo visível ao rolar */
+    position: sticky;
     top: 0;
     z-index: 10;
 }
@@ -35,11 +33,7 @@
     display: inline-block; 
 }
 
-.content { 
-    padding: 15px; 
-    max-width: 500px; 
-    margin: 0 auto; 
-}
+.content { padding: 15px; max-width: 500px; margin: 0 auto; }
 
 .card { 
     background: #1E1E1E; 
@@ -49,132 +43,29 @@
     border: 1px solid #2C2C2C;
 }
 
-.info-topo { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 10px; 
-}
-
 .textarea { 
-    width: 100%; 
-    height: 180px; 
-    background-color: #252525;
-    border: 2px solid #333; /* Borda levemente mais grossa */
-    border-radius: 10px; 
-    padding: 12px; 
-    font-size: 16px; 
-    color: #4A90E2;
-    resize: none; /* Bloqueia o redimensionamento manual */
-    transition: border-color 0.2s;
+    width: 100%; height: 180px; 
+    background-color: #252525; border: 2px solid #333;
+    border-radius: 10px; padding: 12px; font-size: 16px; 
+    color: #4A90E2; resize: none;
 }
 
-.textarea:focus {
-    border-color: #4A90E2;
-    outline: none;
-}
-
-.acoes { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; /* Dividi 50/50 para botões maiores no toque */
-    gap: 12px; 
-    margin-top: 15px; 
-}
-
-.btn-main, .btn-foto, .btn-finalizar { 
-    border: none; 
-    border-radius: 12px; 
-    color: #000; /* Texto preto para contraste no verde */
-    font-size: 15px; 
-    font-weight: bold; 
-    cursor: pointer; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    height: 55px; /* Um pouco mais alto para o polegar */
-    transition: transform 0.1s, filter 0.2s;
-}
-
-.btn-start { background-color: #2ECC71; }
-.btn-stop { 
-    background-color: #E74C3C !important; /* Vermelho ao parar para alerta */
-    color: white;
-} 
-.btn-foto { background-color: #00FF7F; }
-
-/* Botão de Finalizar */
-.btn-finalizar {
-    width: 100%;
+/* --- ESTILO DOS NOVOS BOTÕES (AÇÕES) --- */
+.acoes {
+    display: flex; /* Mudado de grid para flex para alinhar os círculos */
+    justify-content: center;
+    gap: 15px;
     margin-top: 15px;
-    background-color: #4A90E2;
-    color: white;
 }
 
-.btn-main:active, .btn-foto:active, .btn-finalizar:active {
-    transform: scale(0.96);
-    filter: brightness(0.8);
-}
-
-.btn-limpar { 
-    background: rgba(231, 76, 60, 0.1); 
-    border: none; 
-    color: #E74C3C; 
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 11px; 
-    font-weight: bold;
-}
-
-.galeria { 
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 10px; 
-    margin-top: 20px; 
-}
-
-.foto-preview { 
-    width: 100%; 
-    aspect-ratio: 1 / 1; /* Mantém a foto sempre quadrada */
-    object-fit: cover; 
-    border-radius: 10px; 
-    border: 2px solid #333;
-}
-
-/* Animação de Pulsar quando estiver gravando */
-@keyframes pulsar {
-    0% { box-shadow: 0 0 0 0px rgba(231, 76, 60, 0.4); }
-    100% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
-}
-
-.btn-stop {
-    animation: pulsar 1.5s infinite;
-}
-
-.status-label { 
-    text-align: center; 
-    font-size: 13px; 
-    color: #4A90E2; 
-    margin-top: 15px; 
-    font-weight: 500;
-}
-
-
-/* Configurações Gerais */
 :root {
   --icon-size: 45px;
-  --border-radius-factor: 0.5; /* 50% */
   --bg-dark: #2d2c3e;
-  --white: #ffffff;
-  
-  /* Cores dos Efeitos */
   --green: #16A085;
   --red: #C82647;
-  --green-light: #8CC63F;
   --orange: #EB9532;
-  --purple: #7E3661;
 }
 
-/* Base do Ícone */
 .icon {
   cursor: pointer;
   position: relative;
@@ -183,88 +74,68 @@
   justify-content: center;
   width: var(--icon-size);
   height: var(--icon-size);
-  margin: 0 10px;
-  border-radius: calc(var(--icon-size) * var(--border-radius-factor));
-  overflow: hidden;
+  border-radius: 50%;
   border: none;
   background: none;
   padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .icon::before, .icon::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
+  top: 0; left: 0; height: 100%; width: 100%;
   transition: all 0.25s ease;
-  border-radius: calc(var(--icon-size) * var(--border-radius-factor));
-  z-index: 1;
-  box-sizing: border-box;
+  border-radius: 50%;
+  z-index: 0;
 }
 
 .icon i {
   position: relative;
-  color: var(--white);
-  font-size: calc(var(--icon-size) / 2.2);
-  transition: all 0.25s ease;
+  color: white;
+  font-size: 20px;
   z-index: 1;
   font-style: normal;
 }
 
-/* --- EFEITO: FILL (Verde) --- */
-.icon-fill::before {
-  transition-duration: 0.5s;
-  box-shadow: inset 0 0 0 1px var(--green);
+/* Efeitos Ativos no JSX */
+.icon-fill::before { box-shadow: inset 0 0 0 1px var(--green); }
+.icon-fill:hover::before { box-shadow: inset 0 0 0 var(--icon-size) var(--green); }
+
+.icon-enter::after { box-shadow: inset 0 0 0 1px var(--orange); }
+.icon-enter::before { border-radius: 0; margin-left: -100%; box-shadow: inset 0 0 0 var(--icon-size) var(--orange); }
+.icon-enter:hover::before { margin-left: 0; }
+
+.icon-expand::after { box-shadow: inset 0 0 0 1px var(--red); }
+.icon-expand::before { background: var(--red); box-shadow: inset 0 0 0 var(--icon-size) var(--bg-dark); }
+.icon-expand:hover::before { box-shadow: inset 0 0 0 1px var(--bg-dark); }
+
+/* Finalização e Galeria */
+.btn-finalizar {
+    width: 100%;
+    margin-top: 15px;
+    background-color: #4A90E2;
+    color: white;
+    border: none; border-radius: 12px;
+    height: 55px; font-weight: bold;
 }
 
-.icon-fill:hover::before {
-  box-shadow: inset 0 0 0 var(--icon-size) var(--green);
+.status-label { text-align: center; font-size: 13px; color: #4A90E2; margin-top: 15px; }
+
+.galeria { 
+    display: grid; grid-template-columns: repeat(3, 1fr); 
+    gap: 10px; margin-top: 20px; 
 }
 
-/* --- EFEITO: ENTER (Laranja) --- */
-.icon-enter::after {
-  box-shadow: inset 0 0 0 1px var(--orange);
+.foto-preview { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; }
+
+/* Animação de Gravação */
+@keyframes pulsar {
+    0% { box-shadow: 0 0 0 0px rgba(231, 76, 60, 0.4); }
+    100% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
 }
 
-.icon-enter::before {
-  border-radius: 0;
-  margin-left: -100%;
-  box-shadow: inset 0 0 0 var(--icon-size) var(--orange);
-}
-
-.icon-enter:hover::before {
-  margin-left: 0;
-}
-
-/* --- EFEITO: EXPAND (Vermelho) --- */
-.icon-expand::after {
-  box-shadow: inset 0 0 0 1px var(--red);
-}
-
-.icon-expand::before {
-  background: var(--red);
-  box-shadow: inset 0 0 0 var(--icon-size) var(--bg-dark);
-}
-
-.icon-expand:hover::before {
-  box-shadow: inset 0 0 0 1px var(--bg-dark);
-}
-
-/* --- EFEITO: COLLAPSE (Verde Lima) --- */
-.icon-collapse::after {
-  box-shadow: inset 0 0 0 1px var(--green-light);
-}
-
-.icon-collapse::before {
-  border-radius: 0;
-}
-
-.icon-collapse:hover::before {
-  box-shadow: 
-    inset 0 calc(var(--icon-size) / 2) 0 0 var(--green-light),
-    inset 0 calc(var(--icon-size) / -2) 0 0 var(--green-light);
+.active { /* Esta é a classe que você aplica no JSX quando 'gravando' é true */
+    animation: pulsar 1.5s infinite;
+    background-color: #E74C3C !important;
 }
