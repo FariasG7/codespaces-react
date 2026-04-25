@@ -221,39 +221,55 @@ if (!logado) {
         <div className="card">
           <textarea value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Relato de execução..." className="textarea" />
 
-          <div className="card-tabelas" style={{ padding: '0 20px', color: '#fff' }}>
-            <h3>📐 Cofragem (m²)</h3>
-            <table style={{ width: '100%' }}>
-              <thead><tr><th>Peça</th><th>L</th><th>A</th><th>C</th></tr></thead>
-              <tbody>
-                {linhasCofragem.map((linha, i) => (
-                  <tr key={i}>
-                    <td><input className="input-tabela" value={linha.peca} onChange={e => atualizarCampo(i, 'cofragem', 'peca', e.target.value)} /></td>
-                    <td><input className="input-tabela" type="number" value={linha.largura} onChange={e => atualizarCampo(i, 'cofragem', 'largura', e.target.value)} /></td>
-                    <td><input className="input-tabela" type="number" value={linha.altura} onChange={e => atualizarCampo(i, 'cofragem', 'altura', e.target.value)} /></td>
-                    <td><input className="input-tabela" type="number" value={linha.comprimento} onChange={e => atualizarCampo(i, 'cofragem', 'comprimento', e.target.value)} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <button onClick={adicionarLinhaCofragem} className="btn-add">+ Linha</button>
+       <div className="card-tabelas" style={{ padding: '0 20px', color: '#fff' }}>
+  <h3>📐 Cofragem (m²)</h3>
+  <p style={{fontSize: '10px', color: '#888'}}>Laje: L x C | Pilar: (2L + 2A) x C</p>
+  <table style={{ width: '100%' }}>
+    <thead>
+      <tr>
+        <th>Peça</th>
+        <th>L (m)</th>
+        <th>A (m)</th>
+        <th>C (m)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {linhasCofragem.map((linha, i) => (
+        <tr key={i}>
+          <td><input className="input-tabela" placeholder="Ex: Laje" value={linha.peca} onChange={e => atualizarCampo(i, 'cofragem', 'peca', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" placeholder="0.00" value={linha.largura} onChange={e => atualizarCampo(i, 'cofragem', 'largura', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" placeholder="0.00" value={linha.altura} onChange={e => atualizarCampo(i, 'cofragem', 'altura', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" placeholder="0.00" value={linha.comprimento} onChange={e => atualizarCampo(i, 'cofragem', 'comprimento', e.target.value)} /></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <button onClick={adicionarLinhaCofragem} className="btn-add">+ Linha</button>
 
-            <h3 style={{ marginTop: '15px' }}>🧊 Cubicagem Betão (m³)</h3>
-            <table style={{ width: '100%' }}>
-              <thead><tr><th>Peça</th><th>L</th><th>A</th><th>C</th></tr></thead>
-              <tbody>
-                {linhasBetao.map((linha, i) => (
-                  <tr key={i}>
-                    <td><input className="input-tabela" value={linha.elemento} onChange={e => atualizarCampo(i, 'betao', 'elemento', e.target.value)} /></td>
-                    <td><input className="input-tabela" type="number" value={linha.largura} onChange={e => atualizarCampo(i, 'betao', 'largura', e.target.value)} /></td>
-                    <td><input className="input-tabela" type="number" value={linha.altura} onChange={e => atualizarCampo(i, 'betao', 'altura', e.target.value)} /></td>
-                    <td><input className="input-tabela" type="number" value={linha.comprimento} onChange={e => atualizarCampo(i, 'betao', 'comprimento', e.target.value)} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <button onClick={adicionarLinhaBetao} className="btn-add">+ Linha</button>
-          </div>
+  <h3 style={{ marginTop: '15px' }}>🧊 Cubicagem Betão (m³)</h3>
+  <table style={{ width: '100%' }}>
+    <thead>
+      <tr>
+        <th>Elemento</th>
+        <th>L</th>
+        <th>A</th>
+        <th>C</th>
+      </tr>
+    </thead>
+    <tbody>
+      {linhasBetao.map((linha, i) => (
+        <tr key={i}>
+          <td><input className="input-tabela" value={linha.elemento} onChange={e => atualizarCampo(i, 'betao', 'elemento', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" value={linha.largura} onChange={e => atualizarCampo(i, 'betao', 'largura', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" value={linha.altura} onChange={e => atualizarCampo(i, 'betao', 'altura', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" value={linha.comprimento} onChange={e => atualizarCampo(i, 'betao', 'comprimento', e.target.value)} /></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <button onClick={adicionarLinhaBetao} className="btn-add">+ Linha</button>
+</div>
+
 
           <div className="acoes" style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '20px' }}>
             <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
