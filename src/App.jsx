@@ -267,7 +267,7 @@ const limparDadosDiario = () => {
       doc.addPage();
       doc.setTextColor(0, 122, 255);
       doc.setFontSize(14);
-      doc.text("Anexos Fotográficos", 15, 20);
+      doc.text("Anexos", 15, 20);
       let xImg = 15; let yImg = 30;
       fotos.forEach((foto, index) => {
         if (yImg > 230) { doc.addPage(); yImg = 20; }
