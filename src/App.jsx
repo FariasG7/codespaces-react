@@ -196,7 +196,7 @@ function App() {
           <textarea
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
-            placeholder="Relate o que foi feito hoje..."
+            placeholder="Relato de execução..."
             className="textarea"
           />
           
@@ -213,8 +213,8 @@ function App() {
 
           <input type="file" accept="image/*" multiple // Permite selecionar várias fotos da galeria de uma vez
               onChange={handleFoto} style={{ display: 'none' }}  id="upload-button"/>
-          <label htmlFor="upload-button">
-            Selecionar da Galeria
+          <label htmlFor="upload-button" className="btn-foto">
+            Anexar
           </label>
 
             
@@ -222,7 +222,7 @@ function App() {
 
         <div className="acoes-finalizacao">
           <button onClick={finalizarEGerarPDF} className="btn-finalizar">
-            📂 Finalizar e Gerar PDF
+            📂 Gerar PDF
           </button>
         </div>
 
