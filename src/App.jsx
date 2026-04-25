@@ -396,17 +396,32 @@ if (!logado) {
             </label>
           </div>
 
-          <div className="acoes-finalizacao">
-       <button onClick={finalizarEGerarPDF} className="btn-finalizar" disabled={status.includes("Gerando")} // Evita múltiplos cliques>
-        {status.includes("Gerando") ? ( <span>⏳ Gerando...</span>) : (
-          <>
-            <FaRegFilePdf /> Finalizar e Gerar PDF
-          </>
-        )}
-    </button>
+        <div className="acoes-finalizacao">
+  <button 
+    onClick={finalizarEGerarPDF} 
+    className="btn-finalizar" 
+    disabled={status.includes("Gerando")}
+  >
+    {status.includes("Gerando") ? (
+      <span>⏳ Gerando...</span>
+    ) : (
+      <>
+        <FaRegFilePdf /> Finalizar e Gerar PDF
+      </>
+    )}
+  </button>
+  
+  <button 
+    onClick={() => {
+      setLogado(false);
+      localStorage.removeItem('app_logado');
+    }} 
+    style={{marginTop: '10px', background: 'none', color: '#888', border: 'none', cursor: 'pointer'}}
+  >
+    Sair
+  </button>
+</div>
 
-            <button onClick={() => setLogado(false)} style={{marginTop: '10px', background: 'none', color: '#888', border: 'none'}}>Sair</button>
-          </div>
           <p className="status-label">{status}</p>
           
           <div className="galeria">
