@@ -195,7 +195,8 @@ function App() {
         <div className="card">
           <textarea value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Relato de execução..." className="textarea"/>
 
-      <div className="acoes" style={{ backgroundColor: '#2d2c3e', padding: '20px' }}>
+      <div className="acoes">
+
   
         {/* Botão de Voz - Efeito Fill */}
        <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
