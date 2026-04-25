@@ -195,7 +195,8 @@ function App() {
       <main className="content">
         <div className="card">
           <textarea value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Relato de execução..." className="textarea"/>
-<div className="acoes" style={{ display: 'flex', justifyContent: 'center', gap: '15px', padding: '20px' }}>
+
+          <div className="acoes" style={{ display: 'flex', justifyContent: 'center', gap: '15px', padding: '20px' }}>
   
   <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
     <i><i className={gravando ? "fas fa-stop" : "fas fa-microphone"}></i></i>
@@ -212,36 +213,6 @@ function App() {
   </label>
 
 </div>
-
-   
-          
-          <div className="acoes">
-
-  
-        {/* Botão de Voz - Efeito Fill */}
-<button className="icon icon-fill">
-  <span className="material-symbols-outlined">mic</span>
-</button>
-
-        
-       <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
-        <i className="fas fa-microphone"></i>
-       </button>
-
-        {/* Botão de Foto - Efeito Enter */}
-      <label className="icon icon-enter">
-        <i className="fas fa-camera"></i>
-        <input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
-      </label>
-
-            {/* Botão Anexar - Efeito Expand */}
-            <input type="file" accept="image/*" multiple onChange={handleFoto} id="upload-button" hidden />
-            <label htmlFor="upload-button" className="icon icon-expand">
-              <i className="fas fa-paperclop"></i>
-            </label>
-  
-        </div>
-
         <div className="acoes-finalizacao">
           <button onClick={finalizarEGerarPDF} className="btn-finalizar">
             📂 Gerar PDF
