@@ -19,8 +19,15 @@ function App() {
   const [status, setStatus] = useState('Aguardando...');
 
   // Estados para as tabelas
-  const [linhasCofragem, setLinhasCofragem] = useState([{ peca: '', largura: '', altura: '', comprimento: '' }]);
-  const [linhasBetao, setLinhasBetao] = useState([{ elemento: '', largura: '', altura: '', comprimento: '' }]);
+  const [linhasCofragem, setLinhasCofragem] = useState(()=>{
+    const saved = localStorage.getItem('diario_cofragem');
+    return saved ? JSON.parse(saved) : [{peca: '', largura: '', altura: '', });
+});
+  
+  const [linhasBetao, setLinhasBetao] = useState(()=>{
+    const saved = localStorage.getItem('diario_betao');
+    return saved ? JSON.parse(saved) : [{peca: '', largura: '', altura: '', });
+});
 
   const recognitionRef = useRef(null);
   const wakeLockRef = useRef(null);
