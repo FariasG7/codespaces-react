@@ -196,23 +196,27 @@ function App() {
         <div className="card">
           <textarea value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Relato de execução..." className="textarea"/>
 
-          <div className="acoes" style={{ display: 'flex', justifyContent: 'center', gap: '15px', padding: '20px' }}>
+        <div className="acoes" style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '20px' }}>
   
+  {/* Botão de Voz */}
   <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
-    <i><i className={gravando ? "fas fa-stop" : "fas fa-microphone"}></i></i>
+    <i>{gravando ? <FaMicrophone style={{color: 'red'}} /> : <FaMicrophone />}</i>
   </button>
 
+  {/* Botão de Foto */}
   <label className="icon icon-enter">
-    <i><i className="fas fa-camera"></i></i>
+    <i><FaCamera /></i>
     <input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
   </label>
 
+  {/* Botão Anexar */}
   <input type="file" accept="image/*" multiple onChange={handleFoto} id="upload-button" hidden />
   <label htmlFor="upload-button" className="icon icon-expand">
-    <i><i className="fas fa-paperclip"></i></i>
+    <i><FaPaperclip /></i>
   </label>
 
 </div>
+
         <div className="acoes-finalizacao">
           <button onClick={finalizarEGerarPDF} className="btn-finalizar">
             📂 Gerar PDF
