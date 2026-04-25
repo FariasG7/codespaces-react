@@ -15,23 +15,20 @@
 <body>
     <noscript>Você precisa ativar o JavaScript para rodar este aplicativo.</noscript>
 
-    <form id="login-form">
-      <h2>Bem-vindo</h2>
-      <div class="input-group">
-        <input type="email" id="email" placeholder="E-mail" required>
-      </div>
-      <div class="input-group">
-        <input type="password" id="password" placeholder="Senha" required>
-      </div>
-
-        <button type="submit">Entrar</button>
-  <p id="offline-msg" style="display:none; color: orange;">
-    Você está offline. O login requer conexão.
-  </p>
-</form>
-
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-</body>
+        <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('SW registrado!', reg))
+            .catch(err => console.log('Erro no SW:', err));
+            });
+          }
+        </script>
+    </body>
 </html>
