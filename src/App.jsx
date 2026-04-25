@@ -4,37 +4,41 @@ import './App.css';
 import { FaMicrophone, FaCamera, FaPaperclip } from 'react-icons/fa';
 
 function App() {
-  // --- ESTADO DE AUTENTICAÇÃO ---
-  const [logado, setLogado] = useState(false);
+  // --- ESTADOS DE AUTENTICAÇÃO E INTERFACE ---
+  const [logado, setLogado] = useState(() => localStorage.getItem('app_logado') === 'true');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-
-  const [texto, setTexto] = useState(() => localStorage.getItem('diario_texto') || '');
+  const [status, setStatus] = useState('Aguardando...');
   const [gravando, setGravando] = useState(false);
   const [clima, setClima] = useState('Buscando localização...');
-  const [fotos, setFotos] = useState(() => {
-    const saved = localStorage.getItem('diario_fotos');
-    return saved ? JSON.parse(saved) : [];
+
+  // --- ESTADOS DE DADOS (COM CARREGAMENTO DO CACHE) ---
+  const [texto, setTexto] = useState(() => localStorage.getItem('diario_texto') || '');
+  const [fotos, setFotos] = useState(() => JSON.parse(localStorage.getItem('diario_fotos')) || []);
+  
+  const [linhasCofragem, setLinhasCofragem] = useState(() => {
+    const saved = localStorage.getItem('diario_cofragem');
+    return saved ? JSON.parse(saved) : [{ peca: '', largura: '', altura: '', comprimento: '' }];
   });
-  const [status, setStatus] = useState('Aguardando...');
-    // ADICIONE ESTE BLOCO LOGO ABAIXO DOS ESTADOS:
+
+  const [linhasBetao, setLinhasBetao] = useState(() => {
+    const saved = localStorage.getItem('diario_betao');
+    return saved ? JSON.parse(saved) : [{ elemento: '', largura: '', altura: '', comprimento: '' }];
+  });
+
+  // --- EFEITOS DE PERSISTÊNCIA (SALVAMENTO AUTOMÁTICO) ---
   useEffect(() => {
+    localStorage.setItem('app_logado', logado);
+  }, [logado]);
+
+  useEffect(() => {
+    localStorage.setItem('diario_texto', texto);
+    localStorage.setItem('diario_fotos', JSON.stringify(fotos));
     localStorage.setItem('diario_cofragem', JSON.stringify(linhasCofragem));
     localStorage.setItem('diario_betao', JSON.stringify(linhasBetao));
-  }, [linhasCofragem, linhasBetao]);
+  }, [texto, fotos, linhasCofragem, linhasBetao]);
 
-
-  // Estados para as tabelas
-  const [linhasCofragem, setLinhasCofragem] = useState(()=>{
-    const saved = localStorage.getItem('diario_cofragem');
-    return saved ? JSON.parse(saved) : [{peca: '', largura: '', altura: '', });
-});
-  
-  const [linhasBetao, setLinhasBetao] = useState(()=>{
-    const saved = localStorage.getItem('diario_betao');
-    return saved ? JSON.parse(saved) : [{peca: '', largura: '', altura: '', });
-});
-
+  // Restante das refs...
   const recognitionRef = useRef(null);
   const wakeLockRef = useRef(null);
 
