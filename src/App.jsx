@@ -193,58 +193,28 @@ function App() {
 
       <main className="content">
         <div className="card">
-          <textarea
-            value={texto}
-            onChange={(e) => setTexto(e.target.value)}
-            placeholder="Relato de execução..."
-            className="textarea"
-          />
+          <textarea value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Relato de execução..." className="textarea"/>
 
-<div className="acoes" style={{ backgroundColor: '#2d2c3e', padding: '20px' }}>
+      <div className="acoes" style={{ backgroundColor: '#2d2c3e', padding: '20px' }}>
   
-  {/* Botão de Voz - Efeito Fill */}
-  <button 
-    onClick={alternarGravacao} 
-    className={`icon icon-fill ${gravando ? 'active' : ''}`}
-  >
-    <i>{gravando ? '🛑' : '🎤'}</i>
-  </button>
+        {/* Botão de Voz - Efeito Fill */}
+       <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
+        <i>{gravando ? '🛑' : '🎤'}</i>
+       </button>
 
-  {/* Botão de Foto - Efeito Enter */}
-  <label className="icon icon-enter">
-    <i>📷</i>
-    <input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
-  </label>
+        {/* Botão de Foto - Efeito Enter */}
+      <label className="icon icon-enter">
+        <i>📷</i>
+        <input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
+      </label>
 
-  {/* Botão Anexar - Efeito Expand */}
-  <input type="file" accept="image/*" multiple onChange={handleFoto} id="upload-button" hidden />
-  <label htmlFor="upload-button" className="icon icon-expand">
-    <i>📎</i>
-  </label>
-  
-</div>
-
-
-          
-          <div className="acoes">
-            <button onClick={alternarGravacao} className={`btn-main ${gravando ? 'btn-stop' : 'btn-start'}`}>
-              {gravando ? '🛑 Parar' : '🎤 Voz'}
-            </button>
-
-            {/* Substituído o seletor manual pelo Label que é o padrão React/HTML */}
-            <label className="btn-foto">
-              📷 Foto
-              <input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
-            </label>
-
-          <input type="file" accept="image/*" multiple // Permite selecionar várias fotos da galeria de uma vez
-              onChange={handleFoto} style={{ display: 'none' }}  id="upload-button"/>
-          <label htmlFor="upload-button" className="btn-foto">
-            Anexar
+            {/* Botão Anexar - Efeito Expand */}
+            <input type="file" accept="image/*" multiple onChange={handleFoto} id="upload-button" hidden />
+              <label htmlFor="upload-button" className="icon icon-expand">
+            <i>📎</i>
           </label>
-
-            
-          </div>
+  
+        </div>
 
         <div className="acoes-finalizacao">
           <button onClick={finalizarEGerarPDF} className="btn-finalizar">
