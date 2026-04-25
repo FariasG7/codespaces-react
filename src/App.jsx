@@ -17,6 +17,12 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
   const [status, setStatus] = useState('Aguardando...');
+    // ADICIONE ESTE BLOCO LOGO ABAIXO DOS ESTADOS:
+  useEffect(() => {
+    localStorage.setItem('diario_cofragem', JSON.stringify(linhasCofragem));
+    localStorage.setItem('diario_betao', JSON.stringify(linhasBetao));
+  }, [linhasCofragem, linhasBetao]);
+
 
   // Estados para as tabelas
   const [linhasCofragem, setLinhasCofragem] = useState(()=>{
