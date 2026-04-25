@@ -198,15 +198,24 @@ button.icon {
 }
 
 .btn-add {
-    background: #2ecc71;
+    background-color: #2ecc71;
     color: white;
     border: none;
-    padding: 5px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px;
-    margin-bottom: 15px;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+
+.btn-add:active {
+    transform: scale(0.95);
+    background-color: #27ae60;
+}
+
 
 table th {
     font-size: 12px;
