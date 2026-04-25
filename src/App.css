@@ -1,36 +1,39 @@
-/* Reset e Container */
+/* --- 1. RESET E VARIÁVEIS --- */
+:root {
+  --icon-size: 45px;
+  --bg-dark: #2d2c3e;
+  --green: #16A085;
+  --red: #C82647;
+  --orange: #EB9532;
+  --blue-primary: #007AFF;
+  --blue-light: #4A90E2;
+}
+
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    margin: 0;
+    padding: 0;
 }
 
+/* --- 2. CONTAINERS PRINCIPAIS --- */
 .container { 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
     background-color: #121212; 
-    color: #4A90E2; 
+    color: var(--blue-light); 
     min-height: 100vh; 
     padding-bottom: 30px; 
 }
 
 .header { 
     background-color: #1A1A1A; 
-    color: #007AFF; 
+    color: var(--blue-primary); 
     padding: 15px; 
     text-align: center; 
     border-bottom: 1px solid #333;
     position: sticky;
     top: 0;
     z-index: 10;
-}
-
-.clima-badge { 
-    font-size: 12px; 
-    background: rgba(74, 144, 226, 0.1); 
-    color: #4A90E2;
-    border-radius: 10px; 
-    padding: 4px 10px; 
-    margin-top: 5px; 
-    display: inline-block; 
 }
 
 .content { padding: 15px; max-width: 500px; margin: 0 auto; }
@@ -43,49 +46,41 @@
     border: 1px solid #2C2C2C;
 }
 
+/* --- 3. INPUTS E TABELAS --- */
 .textarea { 
     width: 100%; height: 180px; 
     background-color: #252525; border: 2px solid #333;
     border-radius: 10px; padding: 12px; font-size: 16px; 
-    color: #4A90E2; resize: none;
+    color: var(--blue-light); resize: none;
+    outline: none;
 }
 
-/* --- ESTILO DOS NOVOS BOTÕES (AÇÕES) --- */
+.input-tabela {
+    width: 100%;
+    background: #333;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+}
+
+table th {
+    font-size: 12px;
+    color: var(--blue-light);
+    padding: 10px 5px;
+}
+
+/* --- 4. BOTÕES DE AÇÃO (ÍCONES CIRCULARES) --- */
 .acoes {
   display: flex !important;
-  flex-direction: row !important; /* Força ficar na horizontal */
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
   width: 100%;
-  flex-wrap: nowrap; /* Impede que os botões pulem para a linha de baixo */
+  padding: 20px 0;
 }
-
-
-.icon {
-  flex-shrink: 0;           /* Impede que os botões achatem em telas pequenas */
-  /* ... restante do seu código .icon ... */
-}
-
-
-:root {
-  --icon-size: 45px;
-  --bg-dark: #2d2c3e;
-  --green: #16A085;
-  --red: #C82647;
-  --orange: #EB9532;
-}
-
-.icon i {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF; /* Branco puro como na imagem */
-  font-size: 22px; /* Tamanho proporcional ao seu botão de 45px */
-  font-style: normal;
-  z-index: 2;
-}
-
 
 .icon {
   cursor: pointer;
@@ -98,8 +93,19 @@
   border-radius: 50%;
   border: none;
   background: none;
-  padding: 0;
+  flex-shrink: 0;
   overflow: hidden;
+}
+
+.icon i {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 22px;
+  z-index: 2;
+  font-style: normal;
 }
 
 .icon::before, .icon::after {
@@ -111,15 +117,7 @@
   z-index: 0;
 }
 
-.icon i {
-  position: relative;
-  color: white;
-  font-size: 20px;
-  z-index: 1;
-  font-style: normal;
-}
-
-/* Efeitos Ativos no JSX */
+/* Estilos de Cores dos Ícones */
 .icon-fill::before { box-shadow: inset 0 0 0 1px var(--green); }
 .icon-fill:hover::before { box-shadow: inset 0 0 0 var(--icon-size) var(--green); }
 
@@ -128,134 +126,68 @@
 .icon-enter:hover::before { margin-left: 0; }
 
 .icon-expand::after { box-shadow: inset 0 0 0 1px var(--red); }
-.icon-expand::before { background: var(--red); box-shadow: inset 0 0 0 var(--icon-size) var(--bg-dark); }
-.icon-expand:hover::before { box-shadow: inset 0 0 0 1px var(--bg-dark); }
+.icon-expand::before { background: var(--red); box-shadow: inset 0 0 0 var(--icon-size) #1E1E1E; }
+.icon-expand:hover::before { box-shadow: inset 0 0 0 1px #1E1E1E; }
 
-/* Finalização e Galeria */
-.btn-finalizar {
-    width: 100%;
-    margin-top: 15px;
-    background-color: #4A90E2;
-    color: white;
-    border: none; border-radius: 12px;
-    height: 55px; font-weight: bold;
-}
-
-.status-label { text-align: center; font-size: 13px; color: #4A90E2; margin-top: 15px; }
-
-.galeria { 
-    display: grid; grid-template-columns: repeat(3, 1fr); 
-    gap: 10px; margin-top: 20px; 
-}
-
-.foto-preview { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; }
-
-/* Animação de Gravação */
-@keyframes pulsar {
-    0% { box-shadow: 0 0 0 0px rgba(231, 76, 60, 0.4); }
-    100% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
-}
-
-.active { /* Esta é a classe que você aplica no JSX quando 'gravando' é true */
-    animation: pulsar 1.5s infinite;
-    background-color: #E74C3C !important;
-}
-
-/* Garante que o ícone apareça e fique centralizado */
-.icon i {
-  position: relative;
-  display: flex;         /* Adicionado */
-  align-items: center;   /* Adicionado */
-  justify-content: center; /* Adicionado */
-  color: #ffffff;        /* Branco puro */
-  font-size: 22px;       /* Tamanho do ícone */
-  z-index: 2;
-  font-style: normal;
-}
-
-/* Remove qualquer borda ou fundo padrão do botão que possa atrapalhar */
-button.icon {
-  border: none;
-  background: none;
-  padding: 0;
-  outline: none;
-}
-
-/* Ajuste do efeito Expand para não esconder o ícone */
-.icon-expand::before {
-  background: var(--red);
-  box-shadow: inset 0 0 0 var(--icon-size) #1e1e1e; /* Cor do fundo do seu card */
-}
-
-.input-tabela {
-    width: 100%;
-    background: #333;
-    border: 1px solid #444;
-    color: #fff;
-    padding: 5px;
-    border-radius: 4px;
-    text-align: center;
-}
-
+/* --- 5. BOTÕES DE FLUXO (+ LINHA E FINALIZAR) --- */
 .btn-add {
-    background-color: #2ecc71;
+    background: #2ecc71;
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 8px 16px;
-    font-weight: 600;
-    display: flex;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 15px 0;
+    width: auto;
+    display: inline-flex;
     align-items: center;
-    gap: 5px;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: all 0.2s;
 }
 
-.btn-add:active {
-    transform: scale(0.95);
-    background-color: #27ae60;
+.btn-add:active { transform: scale(0.95); background-color: #27ae60; }
+
+.btn-finalizar {
+    width: 100%;
+    background: linear-gradient(135deg, var(--blue-primary) 0%, #005BBF 100%);
+    color: white;
+    font-size: 18px;
+    height: 60px;
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+    margin-top: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
+.btn-finalizar:active { transform: scale(0.98); filter: brightness(1.2); }
 
-table th {
-    font-size: 12px;
-    color: #4A90E2;
-    padding-bottom: 5px;
-}
-
-/* --- TELA DE LOGIN PWA --- */
-
+/* --- 6. TELA DE LOGIN (FIXED OVERLAY) --- */
 .login-container {
-    height: 100vh;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 9999;
+    background-color: #121212;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #121212; /* Fundo igual ao container principal */
     padding: 20px;
 }
 
 .login-box {
     width: 100%;
     max-width: 400px;
-    background: #1E1E1E; /* Mesmo fundo do seu .card */
+    background: #1E1E1E;
     padding: 30px;
     border-radius: 20px;
     border: 1px solid #2C2C2C;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     text-align: center;
-}
-
-.login-box h1 {
-    color: #007AFF;
-    margin-bottom: 30px;
-    font-size: 2rem;
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
 }
 
 .login-input {
@@ -266,35 +198,39 @@ table th {
     border-radius: 12px;
     color: #fff;
     font-size: 16px;
+    margin-bottom: 15px;
     outline: none;
-    transition: border-color 0.3s;
 }
 
-.login-input:focus {
-    border-color: #4A90E2;
+.login-input:focus { border-color: var(--blue-light); }
+
+/* --- 7. UTILITÁRIOS E GALERIA --- */
+.clima-badge { 
+    font-size: 12px; 
+    background: rgba(74, 144, 226, 0.1); 
+    color: var(--blue-light);
+    border-radius: 10px; 
+    padding: 4px 10px; 
+    margin-top: 5px; 
+    display: inline-block; 
 }
 
-.btn-login {
-    width: 100%;
-    padding: 15px;
-    background-color: #007AFF;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: transform 0.1s, background-color 0.2s;
+.status-label { text-align: center; font-size: 13px; color: var(--blue-light); margin-top: 15px; }
+
+.galeria { 
+    display: grid; grid-template-columns: repeat(3, 1fr); 
+    gap: 10px; margin-top: 20px; 
 }
 
-.btn-login:active {
-    transform: scale(0.98);
-    background-color: #005BBF;
+.foto-preview { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; border: 1px solid #333; }
+
+/* Animação de Gravação */
+@keyframes pulsar {
+    0% { box-shadow: 0 0 0 0px rgba(231, 76, 60, 0.4); }
+    100% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
 }
 
-.login-footer {
-    margin-top: 20px;
-    color: #666;
-    font-size: 14px;
+.active { 
+    animation: pulsar 1.5s infinite;
+    background-color: #E74C3C !important;
 }
