@@ -200,19 +200,19 @@ function App() {
   
         {/* Botão de Voz - Efeito Fill */}
        <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
-        <iclassName="fas fa-microphone"></iclassName>{gravando ? '🛑' : '🎤'}</i>
+        <i className="fas fa-microphone"></i>
        </button>
 
         {/* Botão de Foto - Efeito Enter */}
       <label className="icon icon-enter">
-        <i className="fas fa-camera">📷</i>
+        <i className="fas fa-camera"></i>
         <input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
       </label>
 
             {/* Botão Anexar - Efeito Expand */}
             <input type="file" accept="image/*" multiple onChange={handleFoto} id="upload-button" hidden />
             <label htmlFor="upload-button" className="icon icon-expand">
-              <i className="fas fa-paperclop">📎</i>
+              <i className="fas fa-paperclop"></i>
             </label>
   
         </div>
