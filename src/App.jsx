@@ -155,33 +155,37 @@ function App() {
     }
   };
 
-  // --- TELA DE LOGIN ---
-  if (!logado) {
-    return (
-      <div className="login-container" style={{
-        height: '100vh', display: 'flex', flexDirection: 'column', 
-        justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212', color: 'white'
-      }}>
-        <h1 style={{ marginBottom: '20px' }}>🏗️ ObraVoz</h1>
-        <form onSubmit={manipularLogin} style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '80%' }}>
+// --- TELA DE LOGIN ---
+if (!logado) {
+  return (
+    <div className="login-container">
+      <div className="login-box">
+        <h1>🏗️ ObraVoz</h1>
+        <form className="login-form" onSubmit={manipularLogin}>
           <input 
-            type="email" placeholder="E-mail" required 
-            style={{ padding: '15px', borderRadius: '8px', border: 'none' }}
+            type="email" 
+            className="login-input" 
+            placeholder="E-mail" 
+            required 
             onChange={(e) => setEmail(e.target.value)}
           />
           <input 
-            type="password" placeholder="Senha" required 
-            style={{ padding: '15px', borderRadius: '8px', border: 'none' }}
+            type="password" 
+            className="login-input" 
+            placeholder="Senha" 
+            required 
             onChange={(e) => setSenha(e.target.value)}
           />
-          <button type="submit" style={{
-            padding: '15px', borderRadius: '8px', border: 'none', 
-            backgroundColor: '#007bff', color: 'white', fontWeight: 'bold', cursor: 'pointer'
-          }}>Entrar</button>
+          <button type="submit" className="btn-login">Entrar</button>
         </form>
+        <div className="login-footer">
+          Acesso restrito a colaboradores
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   // --- TELA PRINCIPAL (SÓ APARECE SE LOGADO) ---
   return (
