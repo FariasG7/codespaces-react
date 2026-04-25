@@ -138,7 +138,7 @@ function App() {
         
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
-        doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 190, 35,{aling:"right"});
+        doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 170, 25,{aling:"right"});
         doc.text(`Clima: ${clima}`, 20, 42);
         
         doc.line(20, 45, 190, 45); // Linha divisória
