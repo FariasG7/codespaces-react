@@ -115,11 +115,20 @@ function App() {
   };
 
   const finalizarEGerarPDF = () => {
+    if(!texto && fotos.length ===0){
+      alert("O diário está vazio!");
+      return;
+    }
     try {
       const doc = new jsPDF();
+      const larguraPagina = doc.internal.pageSize.getWidth();
       doc.setFont("helvetica", "bold");
       doc.text("RELATÓRIO DIÁRIO DE OBRA", 105, 20, { align: "center" });
-      doc.setFontSize(10);
+      doc.setFillColor(0,122,255);
+      doc.rect(0,0,larguraPagina,40,'F');
+
+      doc.setTextColor(255,255,255);
+      doc.setFontSize(22);
       doc.setFont("helvetica", "normal");
       const climaLimpo = clima.replace(/[^\x00-\x7F]/g, "").trim();
       doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 190, 35, { align: "right" });
