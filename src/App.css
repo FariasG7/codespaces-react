@@ -161,7 +161,7 @@
 
 /* Configurações Gerais */
 :root {
-  --icon-size: 60px;
+  --icon-size: 45px;
   --border-radius-factor: 0.5; /* 50% */
   --bg-dark: #2d2c3e;
   --white: #ffffff;
@@ -183,13 +183,14 @@
   justify-content: center;
   width: var(--icon-size);
   height: var(--icon-size);
-  margin: 0 12px;
+  margin: 0 10px;
   border-radius: calc(var(--icon-size) * var(--border-radius-factor));
   overflow: hidden;
   border: none;
   background: none;
   padding: 0;
   vertical-align: middle;
+  box-sizing: border-box;
 }
 
 .icon::before, .icon::after {
@@ -201,13 +202,14 @@
   width: 100%;
   transition: all 0.25s ease;
   border-radius: calc(var(--icon-size) * var(--border-radius-factor));
-  z-index: 0;
+  z-index: 1;
+  box-sizing: border-box;
 }
 
 .icon i {
   position: relative;
   color: var(--white);
-  font-size: calc(var(--icon-size) / 2.5);
+  font-size: calc(var(--icon-size) / 2.2);
   transition: all 0.25s ease;
   z-index: 1;
   font-style: normal;
