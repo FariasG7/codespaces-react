@@ -38,6 +38,26 @@ function App() {
     localStorage.setItem('diario_betao', JSON.stringify(linhasBetao));
   }, [texto, fotos, linhasCofragem, linhasBetao]);
 
+
+  
+const limparDadosDiario = () => {
+  // Reseta os estados para o valor inicial
+  setTexto('');
+  setFotos([]);
+  setLinhasCofragem([{ peca: '', largura: '', altura: '', comprimento: '' }]);
+  setLinhasBetao([{ elemento: '', largura: '', altura: '', comprimento: '' }]);
+  
+  // Remove do LocalStorage para não carregar ao atualizar a página
+  localStorage.removeItem('diario_texto');
+  localStorage.removeItem('diario_fotos');
+  localStorage.removeItem('diario_cofragem');
+  localStorage.removeItem('diario_betao');
+  
+  setStatus('Aguardando...');
+};
+
+  
+
   // Restante das refs...
   const recognitionRef = useRef(null);
   const wakeLockRef = useRef(null);
@@ -258,7 +278,11 @@ function App() {
 
     doc.save(`Diario_Obra_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`);
     setStatus("✅ PDF Detalhado Gerado!");
-
+    setTimeout(() => {
+      if (window.confirm("PDF gerado com sucesso! Deseja limpar os dados para um novo relatório?")) {
+        limparDadosDiario();
+      }
+    }, 500);    
   } catch (error) {
     console.error(error);
     setStatus("❌ Erro ao gerar PDF");
