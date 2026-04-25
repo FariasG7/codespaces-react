@@ -52,15 +52,15 @@
 
 /* --- ESTILO DOS NOVOS BOTÕES (AÇÕES) --- */
 .acoes {
-  display: flex;            /* Ativa o modo de linha */
-  flex-direction: row;      /* Garante que seja horizontal */
-  justify-content: center;  /* Centraliza o grupo no meio da tela */
-  align-items: center;      /* Alinha os ícones verticalmente */
-  gap: 20px;               /* Cria o espaçamento entre eles */
-  padding: 20px;
-  background: transparent;  /* Remove o tom azul que você pediu */
+  display: flex !important;
+  flex-direction: row !important; /* Força ficar na horizontal */
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
   width: 100%;
+  flex-wrap: nowrap; /* Impede que os botões pulem para a linha de baixo */
 }
+
 
 .icon {
   flex-shrink: 0;           /* Impede que os botões achatem em telas pequenas */
