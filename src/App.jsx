@@ -399,23 +399,18 @@ if (!logado) {
           </div>
 
           <div className="acoes-finalizacao">
-       <button 
-  onClick={finalizarEGerarPDF} 
-  className="btn-finalizar"
-  disabled={status.includes("Gerando")} // Evita múltiplos cliques
->
-  {status.includes("Gerando") ? (
-    <span>⏳ Gerando...</span>
-  ) : (
-    <>
-      <FaRegFilePdf /> Finalizar e Gerar PDF
-    </>
-  )}
-</button>
+       <button onClick={finalizarEGerarPDF} className="btn-finalizar" disabled={status.includes("Gerando")} // Evita múltiplos cliques>
+        {status.includes("Gerando") ? ( <span>⏳ Gerando...</span>) : (
+          <>
+            <FaRegFilePdf /> Finalizar e Gerar PDF
+          </>
+        )}
+    </button>
 
             <button onClick={() => setLogado(false)} style={{marginTop: '10px', background: 'none', color: '#888', border: 'none'}}>Sair</button>
           </div>
           <p className="status-label">{status}</p>
+          
           <div className="galeria">
             {fotos.map((foto, i) => <img key={i} src={foto} className="foto-preview" alt="Obra" />)}
           </div>
