@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
+import{FaMicrophone, FaCamera,FaPaperclip}from'react-icons/fa';
 
 function App() {
   const [texto, setTexto] = useState(() => localStorage.getItem('diario_texto') || '');
