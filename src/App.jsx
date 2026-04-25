@@ -138,7 +138,8 @@ function App() {
         
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
-        doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 170, 25,{aling:"right"});
+      const climaTextoLimpo = clima.replace(/[^\x00-\x7F]/g,"").replace("  ", "  ").trim();
+        doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 170, 35,{aling:"right"});
         doc.text(`Clima: ${clima}`, 20, 42);
         
         doc.line(20, 45, 190, 45); // Linha divisória
@@ -150,9 +151,10 @@ function App() {
         doc.text(splitTexto, 20, 65);
 
         // Fotos
+      doc.line(20, 45, 190, 45); // Linha divisória
         if (fotos.length > 0) {
             doc.addPage();
-            doc.line(20, 45, 190, 45); // Linha divisória
+            
             doc.text("Anexos:", 20, 20);
             fotos.forEach((foto, index) => {
                 const yPos = 30 + (index * 70);
