@@ -199,6 +199,32 @@ function App() {
             placeholder="Relato de execução..."
             className="textarea"
           />
+
+<div className="acoes" style={{ backgroundColor: '#2d2c3e', padding: '20px' }}>
+  
+  {/* Botão de Voz - Efeito Fill */}
+  <button 
+    onClick={alternarGravacao} 
+    className={`icon icon-fill ${gravando ? 'active' : ''}`}
+  >
+    <i>{gravando ? '🛑' : '🎤'}</i>
+  </button>
+
+  {/* Botão de Foto - Efeito Enter */}
+  <label className="icon icon-enter">
+    <i>📷</i>
+    <input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
+  </label>
+
+  {/* Botão Anexar - Efeito Expand */}
+  <input type="file" accept="image/*" multiple onChange={handleFoto} id="upload-button" hidden />
+  <label htmlFor="upload-button" className="icon icon-expand">
+    <i>📎</i>
+  </label>
+  
+</div>
+
+
           
           <div className="acoes">
             <button onClick={alternarGravacao} className={`btn-main ${gravando ? 'btn-stop' : 'btn-start'}`}>
