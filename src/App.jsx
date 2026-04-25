@@ -7,6 +7,10 @@ function App() {
   const [texto, setTexto] = useState(() => localStorage.getItem('diario_texto') || '');
   const [gravando, setGravando] = useState(false);
   const [clima, setClima] = useState('Buscando localização...');
+// Estados para as tabelas
+const [linhasCofragem, setLinhasCofragem] = useState([{ peca: '', largura: '', altura: '', comprimento: '' }]);
+const [linhasBetao, setLinhasBetao] = useState([{ elemento: '', largura: '', altura: '', comprimento: '' }]);
+
   const [fotos, setFotos] = useState(() => {
     const saved = localStorage.getItem('diario_fotos');
     return saved ? JSON.parse(saved) : [];
@@ -150,6 +154,59 @@ function App() {
         const splitTexto = doc.splitTextToSize(texto, 170);
         doc.text(splitTexto, 20, 65);
 
+      // Dentro do try do finalizarEGerarPDF, após o relato:
+
+doc.setFont("helvetica", "bold");
+doc.text("Medições e Quantidades:", 20, doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : 100);
+
+// Cálculo Cofragem (Exemplo: 2 * (L+C) * A)
+let totalCofragem = 0;
+linhasCofragem.forEach((l, i) => {
+    const m2 = (Number(l.largura) || 0) * (Number(l.altura) || 0) * (Number(l.comprimento) || 0); // Ajuste a fórmula conforme sua necessidade
+    totalCofragem += m2;
+});
+
+// Cálculo Betão (L * A * C)
+let totalBetao = 0;
+linhasBetao.forEach(l => {
+    totalBetao += (Number(l.largura) || 0) * (Number(l.altura) || 0) * (Number(l.comprimento) || 0);
+});
+
+doc.setFontSize(11);
+doc.text(`Total Cofragem: ${totalCofragem.toFixed(2)} m2`, 20, 110);
+doc.text(`Total Betão: ${totalBetao.toFixed(2)} m3`, 20, 118);
+
+
+      const adicionarLinhaCofragem = () => setLinhasCofragem([...linhasCofragem, { peca: '', largura: '', altura: '', comprimento: '' }]);
+const adicionarLinhaBetao = () => setLinhasBetao([...linhasBetao, { elemento: '', largura: '', altura: '', comprimento: '' }]);
+
+const atualizarCampo = (index, tabela, campo, valor) => {
+    if (tabela === 'cofragem') {
+        const novas = [...linhasCofragem];
+        novas[index][campo] = valor;
+        setLinhasCofragem(novas);
+    } else {
+        const novas = [...linhasBetao];
+        novas[index][campo] = valor;
+        setLinhasBetao(novas);
+    }
+};
+const adicionarLinhaCofragem = () => setLinhasCofragem([...linhasCofragem, { peca: '', largura: '', altura: '', comprimento: '' }]);
+const adicionarLinhaBetao = () => setLinhasBetao([...linhasBetao, { elemento: '', largura: '', altura: '', comprimento: '' }]);
+
+const atualizarCampo = (index, tabela, campo, valor) => {
+    if (tabela === 'cofragem') {
+        const novas = [...linhasCofragem];
+        novas[index][campo] = valor;
+        setLinhasCofragem(novas);
+    } else {
+        const novas = [...linhasBetao];
+        novas[index][campo] = valor;
+        setLinhasBetao(novas);
+    }
+};
+
+
         // Fotos
       doc.line(20, 45, 190, 45); // Linha divisória
         if (fotos.length > 0) {
@@ -200,7 +257,46 @@ function App() {
           <textarea value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Relato de execução..." className="textarea"/>
 
         <div className="acoes" style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '20px' }}>
-  
+
+<div className="card-tabelas" style={{ marginTop: '20px', color: '#fff' }}>
+  <h3>📐 Medições de Cofragem (m²)</h3>
+  <table style={{ width: '100%', marginBottom: '10px' }}>
+    <thead>
+      <tr><th>Peça</th><th>L</th><th>A</th><th>C</th></tr>
+    </thead>
+    <tbody>
+      {linhasCofragem.map((linha, i) => (
+        <tr key={i}>
+          <td><input className="input-tabela" value={linha.peca} onChange={e => atualizarCampo(i, 'cofragem', 'peca', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" value={linha.largura} onChange={e => atualizarCampo(i, 'cofragem', 'largura', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" value={linha.altura} onChange={e => atualizarCampo(i, 'cofragem', 'altura', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" value={linha.comprimento} onChange={e => atualizarCampo(i, 'cofragem', 'comprimento', e.target.value)} /></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <button onClick={adicionarLinhaCofragem} className="btn-add">+ Linha</button>
+
+  <h3 style={{ marginTop: '20px' }}>🧊 Cubicagem de Betão (m³)</h3>
+  <table style={{ width: '100%' }}>
+    <thead>
+      <tr><th>Elemento</th><th>L</th><th>A</th><th>C</th></tr>
+    </thead>
+    <tbody>
+      {linhasBetao.map((linha, i) => (
+        <tr key={i}>
+          <td><input className="input-tabela" value={linha.elemento} onChange={e => atualizarCampo(i, 'betao', 'elemento', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" value={linha.largura} onChange={e => atualizarCampo(i, 'betao', 'largura', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" value={linha.altura} onChange={e => atualizarCampo(i, 'betao', 'altura', e.target.value)} /></td>
+          <td><input className="input-tabela" type="number" value={linha.comprimento} onChange={e => atualizarCampo(i, 'betao', 'comprimento', e.target.value)} /></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <button onClick={adicionarLinhaBetao} className="btn-add">+ Linha</button>
+</div>
+
+          
   {/* Botão de Voz */}
   <button onClick={alternarGravacao} className={`icon icon-fill ${gravando ? 'active' : ''}`}>
     <i>{gravando ? <FaMicrophone style={{color: 'red'}} /> : <FaMicrophone />}</i>
