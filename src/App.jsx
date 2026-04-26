@@ -147,25 +147,81 @@ function App() {
   };
 
   const finalizarEGerarPDF = () => {
-    try {
-      const doc = new jsPDF();
-      setStatus("⏳ Gerando PDF...");
-      
-      doc.setFillColor(0, 122, 255); 
-      doc.rect(0, 0, 210, 40, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.text("RELATÓRIO DIÁRIO DE OBRA", 15, 25);
-      
-      doc.setTextColor(0);
-      doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 15, 50);
-      doc.text(doc.splitTextToSize(`Relato: ${texto}`, 180), 15, 60);
+  try {
+    const doc = new jsPDF();
+    const larguraPagina = doc.internal.pageSize.getWidth();
+    setStatus("⏳ Gerando PDF completo...");
 
-      doc.save("Diario_Obra.pdf");
-      setStatus("✅ PDF Gerado!");
+    // --- 1. CABEÇALHO ESTILIZADO ---
+    doc.setFillColor(0, 122, 255); // Azul ObraVoz
+    doc.rect(0, 0, larguraPagina, 40, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.text("RELATÓRIO DIÁRIO DE OBRA", 15, 25);
+    doc.setFontSize(10);
+    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')} | Clima: ${clima}`, 15, 33);
+
+    // --- 2. RELATO DE EXECUÇÃO ---
+    doc.setTextColor(40, 40, 40);
+    doc.setFontSize(14);
+    doc.text("Relato da Execução:", 15, 55);
+    doc.setFontSize(11);
+    const textoQuebrado = doc.splitTextToSize(texto || "Nenhum relato inserido.", larguraPagina - 30);
+    doc.text(textoQuebrado, 15, 65);
+
+    let yPos = 65 + (textoQuebrado.length * 7) + 10;
+
+    // --- 3. TABELA DE COFRAGEM ---
+    if (yPos > 250) { doc.addPage(); yPos = 20; }
+    doc.setFontSize(14);
+    doc.setTextColor(0, 122, 255);
+    doc.text("Medições de Cofragem (m²)", 15, yPos);
+    yPos += 10;
+
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    linhasCofragem.forEach((l) => {
+      if (l.peca) {
+        const L = parseFloat(l.largura) || 0;
+        const A = parseFloat(l.altura) || 0;
+        const C = parseFloat(l.comprimento) || 0;
+        const subtotal = A > 0 ? (2 * L + 2 * A) * C : L * C; // Lógica Pilar vs Laje
+        doc.text(`${l.peca}: ${subtotal.toFixed(2)} m²`, 20, yPos);
+        yPos += 7;
+      }
+    });
+
+    // --- 4. ANEXOS FOTOGRÁFICOS ---
+    if (fotos.length > 0) {
+      doc.addPage();
+      doc.setTextColor(0, 122, 255);
+      doc.text("Anexos Fotográficos", 15, 20);
+      let xImg = 15;
+      let yImg = 30;
       
-      if (window.confirm("Deseja limpar os dados?")) limparDadosDiario();
-    } catch (e) { setStatus("❌ Erro no PDF"); }
-  };
+      fotos.forEach((foto, index) => {
+        if (yImg > 230) { doc.addPage(); yImg = 20; }
+        doc.addImage(foto, 'JPEG', xImg, yImg, 85, 65); // Ajuste de escala para mobile
+        xImg === 15 ? xImg = 110 : (xImg = 15, yImg += 75);
+      });
+    }
+
+    // --- 5. FINALIZAÇÃO ---
+    doc.save(`Diario_Obra_${new Date().toISOString().slice(0,10)}.pdf`);
+    setStatus("✅ PDF Gerado com Sucesso!");
+    
+    setTimeout(() => {
+      if (window.confirm("Deseja limpar os dados para o próximo relatório?")) {
+        limparDadosDiario(); // Função para resetar estados e localStorage
+      }
+    }, 500);
+
+  } catch (error) {
+    console.error("Erro ao gerar PDF:", error);
+    setStatus("❌ Erro ao gerar PDF");
+  }
+};
+
 
   // --- 6. RENDERIZAÇÃO ---
   if (!logado) {
