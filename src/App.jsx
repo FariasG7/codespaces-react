@@ -162,7 +162,7 @@ function App() {
     doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')} | Clima: ${clima}`, 15, 33);
 
     // --- 2. RELATO ---
-    doc.setTextColor(40, 40, 40);
+    doc.setTextColor(0, 122, 255);
     doc.setFontSize(14);
     doc.text("Relato da Execução:", 15, 55);
     doc.setDrawColor(200, 200, 200);
@@ -178,7 +178,7 @@ function App() {
     if (yPos > 240) { doc.addPage(); yPos = 20; }
     doc.setFontSize(14);
     doc.setTextColor(0, 122, 255);
-    doc.text("Medições de Cofragem", 15, yPos);
+    doc.text("Medições de Cofragem:", 15, yPos);
     yPos += 5;
     doc.line(15, yPos, larguraPagina - 15, yPos); // Linha separadora
     yPos += 10;
@@ -202,7 +202,7 @@ function App() {
     if (yPos > 240) { doc.addPage(); yPos = 20; }
     doc.setFontSize(14);
     doc.setTextColor(0, 122, 255);
-    doc.text("Cubicagem de Betão", 15, yPos);
+    doc.text("Cubicagem de Betão:", 15, yPos);
     yPos += 5;
     doc.line(15, yPos, larguraPagina - 15, yPos);
     yPos += 10;
@@ -222,7 +222,7 @@ function App() {
       doc.addPage();
       doc.setTextColor(0, 122, 255);
       doc.setFontSize(14);
-      doc.text("Anexos", 15, 20);
+      doc.text("Anexos:", 15, 20);
       doc.line(15, yPos, larguraPagina - 15, yPos);
       let xImg = 15;
       let yImg = 30;
