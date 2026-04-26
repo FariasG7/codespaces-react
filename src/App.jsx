@@ -12,6 +12,39 @@ const USUARIO_TEMP = {
 function App() {
   // --- ESTADOS DE AUTENTICAÇÃO E INTERFACE ---
   const [logado, setLogado] = useState(() => localStorage.getItem('app_logado') === 'true');
+
+// No topo da função App()
+const [logado, setLogado] = useState(() => localStorage.getItem('app_logado') === 'true');
+
+// Estados com tratamento de erro (Se o JSON estiver podre, ele reseta para o padrão)
+const [linhasCofragem, setLinhasCofragem] = useState(() => {
+  try {
+    const saved = localStorage.getItem('diario_cofragem');
+    return saved ? JSON.parse(saved) : [{ peca: '', largura: '', altura: '', comprimento: '' }];
+  } catch (e) {
+    return [{ peca: '', largura: '', altura: '', comprimento: '' }];
+  }
+});
+
+const [linhasBetao, setLinhasBetao] = useState(() => {
+  try {
+    const saved = localStorage.getItem('diario_betao');
+    return saved ? JSON.parse(saved) : [{ elemento: '', largura: '', altura: '', comprimento: '' }];
+  } catch (e) {
+    return [{ elemento: '', largura: '', altura: '', comprimento: '' }];
+  }
+});
+
+const [fotos, setFotos] = useState(() => {
+  try {
+    const saved = localStorage.getItem('diario_fotos');
+    return saved ? JSON.parse(saved) : [];
+  } catch (e) {
+    return [];
+  }
+});
+
+  
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [status, setStatus] = useState('Aguardando...');
