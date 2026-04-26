@@ -3,6 +3,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 import { FaMicrophone, FaCamera, FaPaperclip } from 'react-icons/fa';
 
+const USUARIO_TEMP = {
+  email: "obra@teste.com",
+  senha: "123"
+};
+
+
 function App() {
   // --- ESTADOS DE AUTENTICAÇÃO E INTERFACE ---
   const [logado, setLogado] = useState(() => localStorage.getItem('app_logado') === 'true');
