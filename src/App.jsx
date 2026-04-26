@@ -223,6 +223,7 @@ function App() {
       doc.setTextColor(0, 122, 255);
       doc.setFontSize(14);
       doc.text("Anexos", 15, 20);
+      doc.line(15, yPos, larguraPagina - 15, yPos);
       let xImg = 15;
       let yImg = 30;
       
