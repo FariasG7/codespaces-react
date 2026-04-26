@@ -67,15 +67,26 @@ const limparDadosDiario = () => {
   const wakeLockRef = useRef(null);
 
   // --- FUNÇÃO DE LOGIN ---
-  const manipularLogin = (e) => {
-    e.preventDefault();
+/*  const manipularLogin = (e) => {
+   e.preventDefault();
     // Aqui você pode adicionar sua lógica de validação (Firebase, API, etc)
     if (email !== "" && senha !== "") {
       setLogado(true);
     } else {
       alert("Preencha os campos para entrar.");
     }
-  };
+  };--*/
+  const manipularLogin = (e) => {
+  e.preventDefault();
+  if (email === USUARIO_TEMP.email && senha === USUARIO_TEMP.senha) {
+    setLogado(true);
+    localStorage.setItem('app_logado', 'true');
+    setStatus("Bem-vindo!");
+  } else {
+    alert("E-mail ou senha incorretos. (Dica: obra@teste.com / 123)");
+  }
+};
+
 
   // --- RESTANTE DAS SUAS FUNÇÕES (buscarClima, alternarGravacao, PDF...) ---
   // [Mantenha as funções adicionarLinhaCofragem, adicionarLinhaBetao, buscarClima, etc., como estavam]
