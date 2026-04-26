@@ -152,8 +152,8 @@ function App() {
     const larguraPagina = doc.internal.pageSize.getWidth();
     setStatus("⏳ Gerando PDF completo...");
 
-    // --- 1. CABEÇALHO ESTILIZADO ---
-    doc.setFillColor(0, 122, 255); // Azul ObraVoz
+    // --- 1. CABEÇALHO ---
+    doc.setFillColor(0, 122, 255); 
     doc.rect(0, 0, larguraPagina, 40, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
@@ -161,33 +161,35 @@ function App() {
     doc.setFontSize(10);
     doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')} | Clima: ${clima}`, 15, 33);
 
-    // --- 2. RELATO DE EXECUÇÃO ---
+    // --- 2. RELATO ---
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(14);
     doc.text("Relato da Execução:", 15, 55);
     doc.setFontSize(11);
-    const textoQuebrado = doc.splitTextToSize(texto || "Nenhum relato inserido.", larguraPagina - 30);
+    const textoQuebrado = doc.splitTextToSize(texto || "Nenhum relato.", larguraPagina - 30);
     doc.text(textoQuebrado, 15, 65);
 
     let yPos = 65 + (textoQuebrado.length * 7) + 10;
 
-    // --- 3. TABELA DE COFRAGEM ---
-    if (yPos > 250) { doc.addPage(); yPos = 20; }
+    // --- 3. TABELA DE MEDIÇÕES (COFRAGEM) ---
+    if (yPos > 240) { doc.addPage(); yPos = 20; }
     doc.setFontSize(14);
     doc.setTextColor(0, 122, 255);
-    doc.text("Medições de Cofragem (m²)", 15, yPos);
+    doc.text("Medições de Cofragem", 15, yPos);
     yPos += 10;
 
     doc.setFontSize(10);
     doc.setTextColor(0);
     linhasCofragem.forEach((l) => {
-      if (l.peca) {
+      if (l.peca && (l.largura || l.comprimento)) {
         const L = parseFloat(l.largura) || 0;
         const A = parseFloat(l.altura) || 0;
         const C = parseFloat(l.comprimento) || 0;
-        const subtotal = A > 0 ? (2 * L + 2 * A) * C : L * C; // Lógica Pilar vs Laje
-        doc.text(`${l.peca}: ${subtotal.toFixed(2)} m²`, 20, yPos);
+        // Lógica: Pilar (2L + 2A) * C ou Laje L * C
+        const subtotal = A > 0 ? (2 * L + 2 * A) * C : L * C;
+        doc.text(`• ${l.peca}: ${subtotal.toFixed(2)} m²`, 20, yPos);
         yPos += 7;
+        if (yPos > 280) { doc.addPage(); yPos = 20; }
       }
     });
 
@@ -195,32 +197,29 @@ function App() {
     if (fotos.length > 0) {
       doc.addPage();
       doc.setTextColor(0, 122, 255);
+      doc.setFontSize(14);
       doc.text("Anexos Fotográficos", 15, 20);
       let xImg = 15;
       let yImg = 30;
       
-      fotos.forEach((foto, index) => {
-        if (yImg > 230) { doc.addPage(); yImg = 20; }
-        doc.addImage(foto, 'JPEG', xImg, yImg, 85, 65); // Ajuste de escala para mobile
+      fotos.forEach((foto) => {
+        if (yImg > 230) { doc.addPage(); yImg = 20; xImg = 15; }
+        doc.addImage(foto, 'JPEG', xImg, yImg, 85, 65);
+        // Organiza em duas colunas
         xImg === 15 ? xImg = 110 : (xImg = 15, yImg += 75);
       });
     }
 
-    // --- 5. FINALIZAÇÃO ---
-    doc.save(`Diario_Obra_${new Date().toISOString().slice(0,10)}.pdf`);
+    // --- 5. SALVAMENTO ---
+    doc.save(`Diario_Obra_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`);
     setStatus("✅ PDF Gerado com Sucesso!");
-    
-    setTimeout(() => {
-      if (window.confirm("Deseja limpar os dados para o próximo relatório?")) {
-        limparDadosDiario(); // Função para resetar estados e localStorage
-      }
-    }, 500);
 
   } catch (error) {
-    console.error("Erro ao gerar PDF:", error);
+    console.error(error);
     setStatus("❌ Erro ao gerar PDF");
   }
 };
+
 
 
   // --- 6. RENDERIZAÇÃO ---
