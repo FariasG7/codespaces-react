@@ -165,17 +165,22 @@ function App() {
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(14);
     doc.text("Relato da Execução:", 15, 55);
+    doc.setDrawColor(200, 200, 200);
+    doc.line(15, 57, larguraPagina - 15, 57); // Linha decorativa
+    
     doc.setFontSize(11);
     const textoQuebrado = doc.splitTextToSize(texto || "Nenhum relato.", larguraPagina - 30);
     doc.text(textoQuebrado, 15, 65);
 
-    let yPos = 65 + (textoQuebrado.length * 7) + 10;
+    let yPos = 65 + (textoQuebrado.length * 7) + 15;
 
-    // --- 3. TABELA DE MEDIÇÕES (COFRAGEM) ---
+    // --- 3. TABELA DE COFRAGEM ---
     if (yPos > 240) { doc.addPage(); yPos = 20; }
     doc.setFontSize(14);
     doc.setTextColor(0, 122, 255);
     doc.text("Medições de Cofragem", 15, yPos);
+    yPos += 5;
+    doc.line(15, yPos, larguraPagina - 15, yPos); // Linha separadora
     yPos += 10;
 
     doc.setFontSize(10);
@@ -185,40 +190,58 @@ function App() {
         const L = parseFloat(l.largura) || 0;
         const A = parseFloat(l.altura) || 0;
         const C = parseFloat(l.comprimento) || 0;
-        // Lógica: Pilar (2L + 2A) * C ou Laje L * C
         const subtotal = A > 0 ? (2 * L + 2 * A) * C : L * C;
-        doc.text(`• ${l.peca}: ${subtotal.toFixed(2)} m²`, 20, yPos);
+        doc.text(`${l.peca}: L=${L}m | A=${A}m | C=${C}m  => ${subtotal.toFixed(2)} m²`, 20, yPos);
         yPos += 7;
         if (yPos > 280) { doc.addPage(); yPos = 20; }
       }
     });
 
-    // --- 4. ANEXOS FOTOGRÁFICOS ---
+    // --- 4. TABELA DE BETÃO ---
+    yPos += 10;
+    if (yPos > 240) { doc.addPage(); yPos = 20; }
+    doc.setFontSize(14);
+    doc.setTextColor(0, 122, 255);
+    doc.text("Cubicagem de Betão", 15, yPos);
+    yPos += 5;
+    doc.line(15, yPos, larguraPagina - 15, yPos);
+    yPos += 10;
+
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    linhasBetao.forEach((l) => {
+      if (l.elemento) {
+        const vol = (parseFloat(l.largura) || 0) * (parseFloat(l.altura) || 0) * (parseFloat(l.comprimento) || 0);
+        doc.text(`${l.elemento}: ${vol.toFixed(2)} m³`, 20, yPos);
+        yPos += 7;
+      }
+    });
+
+    // --- 5. FOTOS ---
     if (fotos.length > 0) {
       doc.addPage();
       doc.setTextColor(0, 122, 255);
       doc.setFontSize(14);
-      doc.text("Anexos Fotográficos", 15, 20);
+      doc.text("Anexos", 15, 20);
       let xImg = 15;
       let yImg = 30;
       
       fotos.forEach((foto) => {
         if (yImg > 230) { doc.addPage(); yImg = 20; xImg = 15; }
         doc.addImage(foto, 'JPEG', xImg, yImg, 85, 65);
-        // Organiza em duas colunas
         xImg === 15 ? xImg = 110 : (xImg = 15, yImg += 75);
       });
     }
 
-    // --- 5. SALVAMENTO ---
-    doc.save(`Diario_Obra_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`);
-    setStatus("✅ PDF Gerado com Sucesso!");
+    doc.save(`Relatorio_Obra_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`);
+    setStatus("✅ PDF Gerado!");
 
   } catch (error) {
     console.error(error);
     setStatus("❌ Erro ao gerar PDF");
   }
 };
+
 
 
 
