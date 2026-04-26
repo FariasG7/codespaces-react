@@ -159,7 +159,8 @@ function App() {
     doc.setFontSize(22);
     doc.text("RELATÓRIO DIÁRIO DE OBRA", 15, 25);
     doc.setFontSize(10);
-    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')} | Clima: ${clima}`, 15, 33);
+    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}',180,35);
+    doc.text('Clima: ${clima}`, 15, 33);
 
     // --- 2. RELATO ---
     doc.setTextColor(0, 122, 255);
