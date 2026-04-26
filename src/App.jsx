@@ -153,14 +153,32 @@ function App() {
     setStatus("⏳ Gerando PDF completo...");
 
     // --- 1. CABEÇALHO ---
-    doc.setFillColor(0, 122, 255); 
-    doc.rect(0, 0, larguraPagina, 40, 'F');
-    doc.setTextColor(255, 255, 255);
+        // --- 1. CABEÇALHO SEM FUNDO AZUL ---
+    // doc.setFillColor(0, 122, 255); <-- Removido
+    // doc.rect(0, 0, larguraPagina, 40, 'F'); <-- Removido
+
+    // Alteramos a cor do texto para Preto (0, 0, 0) para ser visível no fundo branco
+    doc.setTextColor(0, 0, 0); 
+
+    // Título no canto esquerdo
     doc.setFontSize(22);
     doc.text("RELATÓRIO DIÁRIO DE OBRA", 15, 25);
+
+    // Configurações para o canto direito
     doc.setFontSize(10);
-    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}',180,35);
-    doc.text('Clima: ${clima}`, 15, 33);
+    const margemDireita = larguraPagina - 15;
+
+    // Data no canto superior direito
+    const dataAtual = new Date().toLocaleDateString('pt-BR');
+    doc.text(`Data: ${dataAtual}`, margemDireita, 20, { align: 'right' });
+
+    // Clima logo abaixo da data
+    const climaLimpo = clima.replace(/[^\x00-\x7F]/g, ""); 
+    doc.text(`Clima: ${climaLimpo}`, margemDireita, 30, { align: 'right' });
+
+    // Opcional: Adicionar uma linha preta fina para separar o cabeçalho do corpo
+    doc.setDrawColor(0, 0, 0);
+    doc.line(15, 35, larguraPagina - 15, 35);
 
     // --- 2. RELATO ---
     doc.setTextColor(0, 122, 255);
