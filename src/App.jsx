@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { jsPDF } from "jspdf"; 
 import './App.css';
 import { FaMicrophone, FaCamera, FaPaperclip, FaRegFilePdf } from 'react-icons/fa';
+import { AuthProvider } from './AuthContext';
+
 
 const USUARIO_TEMP = {
   email: "obra@teste.com",
@@ -282,6 +284,7 @@ function App() {
   }
 
   return (
+    <AuthProvider>
     <div className="container">
       <header className="header">
         <h1>🏗️ ObraVoz</h1>
@@ -334,6 +337,7 @@ function App() {
         </div>
       </main>
     </div>
+    </AuthProvider>
   );
 }
 
