@@ -159,6 +159,21 @@ function MainContent() {
     }
   };
 
+    // --- FUNÇÕES QUE ESTAVAM FALTANDO ---
+  const adicionarLinha = () => {
+    setLinhasCofragem([...linhasCofragem, { peca: '', largura: '', altura: '', comprimento: '' }]);
+  };
+
+  const removerLinha = (index) => {
+    const novaLista = linhasCofragem.filter((_, i) => i !== index);
+    setLinhasCofragem(novaLista);
+  };
+
+  const removerFoto = (index) => {
+    setFotos(fotos.filter((_, i) => i !== index));
+  };
+
+
   return (
     <div className="container">
       <header className="header">
@@ -179,12 +194,7 @@ function MainContent() {
             <h3>📐 Cofragem (m²)</h3>
             {linhasCofragem.map((l, i) => (
     <div key={i} className="linha-cofragem">
-      <input
-        className="input-peca"
-        placeholder="Peça (Ex: P1)"
-        value={l.peca}
-        onChange={e => atualizarCampo(i, 'peca', e.target.value)}
-      />
+      <input className="input-peca" placeholder="Peça (Ex: P1)" value={l.peca} onChange={e => atualizarCampo(i, 'peca', e.target.value)}/>
       <div className="inputs-medidas">
         <div className="campo-container">
           <label>L</label>
