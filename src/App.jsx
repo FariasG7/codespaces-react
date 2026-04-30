@@ -247,7 +247,7 @@ function MainContent() {
       </main>
     </div>
   );
-}
+};
 
 // --- EXPORT PRINCIPAL COM PROVIDER ---
 export default function App() {
