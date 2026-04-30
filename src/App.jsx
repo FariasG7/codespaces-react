@@ -178,41 +178,62 @@ function MainContent() {
           <div className="card-tabelas">
             <h3>📐 Cofragem (m²)</h3>
             {linhasCofragem.map((l, i) => (
-              <div key={i} className="row-inputs">
-                <input placeholder="Peça" value={l.peca} onChange={e => atualizarCampo(i, 'cofragem', 'peca', e.target.value)} />
-                <input type="number" placeholder="L" value={l.largura} onChange={e => atualizarCampo(i, 'cofragem', 'largura', e.target.value)} />
-                <input type="number" placeholder="C" value={l.comprimento} onChange={e => atualizarCampo(i, 'cofragem', 'comprimento', e.target.value)} />
-              </div>
-            ))}
-            <button className="btn-add" onClick={() => setLinhasCofragem([...linhasCofragem, {peca:'', largura:'', altura:'', comprimento:''}])}>
-              <FaPlus /> Peça
-            </button>
-          </div>
-
-          <div className="acoes">
-            <button onClick={alternarGravacao} className={`icon-btn ${gravando ? 'recording' : ''}`}>
-              <FaMicrophone />
-            </button>
-            <label className="icon-btn">
-              <FaCamera /><input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
-            </label>
-            <label className="icon-btn">
-              <FaPaperclip /><input type="file" accept="image/*" multiple onChange={handleFoto} hidden />
-            </label>
-          </div>
-
-          <button onClick={gerarPDF} className="btn-finalizar">
-            <FaRegFilePdf /> Gerar Relatório
-          </button>
-          
-          <button onClick={logout} className="btn-sair">
-            <FaSignOutAlt /> Sair
-          </button>
+    <div key={i} className="linha-cofragem">
+      <input
+        className="input-peca"
+        placeholder="Peça (Ex: P1)"
+        value={l.peca}
+        onChange={e => atualizarCampo(i, 'peca', e.target.value)}
+      />
+      <div className="inputs-medidas">
+        <div className="campo-container">
+          <label>L</label>
+          <input type="number" value={l.largura} onChange={e => atualizarCampo(i, 'largura', e.target.value)} />
         </div>
-        
-        <div className="galeria">
-            {fotos.map((f, i) => <img key={i} src={f} className="foto-preview" alt="anexo" />)}
+        <div className="campo-container">
+          <label>A</label>
+          <input type="number" value={l.altura} onChange={e => atualizarCampo(i, 'altura', e.target.value)} />
         </div>
+        <div className="campo-container">
+          <label>C</label>
+          <input type="number" value={l.comprimento} onChange={e => atualizarCampo(i, 'comprimento', e.target.value)} />
+        </div>
+        <button className="btn-remover-linha" onClick={() => removerLinha(i)}>
+          <FaTrash size={14} />
+        </button>
+      </div>
+    </div>
+  ))}
+  <button onClick={adicionarLinha} className="btn-add">
+    <FaPlus /> Peça
+  </button>
+</div>
+
+<div className="acoes">
+  <button onClick={alternarGravacao} className={`icon-btn btn-mic ${gravando ? 'recording' : ''}`}><FaMicrophone /></button>
+  <label className="icon-btn btn-cam"><FaCamera /><input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden /></label>
+  <label className="icon-btn btn-clip"><FaPaperclip /><input type="file" accept="image/*" multiple onChange={handleFoto} hidden /></label>
+</div>
+
+{/* Galeria posicionada acima do botão Gerar Relatório */}
+{fotos.length > 0 && (
+  <div className="galeria-preview">
+    {fotos.map((f, i) => (
+      <div key={i} className="foto-item">
+        <img src={f} alt="obra" />
+        <button className="btn-remover-foto" onClick={() => removerFoto(i)}>×</button>
+      </div>
+    ))}
+  </div>
+)}
+
+<button className="btn-finalizar">
+  <FaRegFilePdf /> Gerar Relatório
+</button>
+
+<button onClick={logout} className="btn-sair">
+  <FaSignOutAlt /> Sair
+</button>
       </main>
     </div>
   );
