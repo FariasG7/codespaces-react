@@ -175,79 +175,89 @@ function MainContent() {
 
 
   return (
-    <div className="container">
-      <header className="header">
-        <h1>🏗️ ObraVoz</h1>
-        <div className="clima-badge">{clima}</div>
-      </header>
+  <div className="container">
+    <header className="header">
+      <h1>🏗️ ObraVoz</h1>
+      <div className="clima-badge">{clima}</div>
+    </header>
 
-      <main className="content">
-        <div className="card">
-          <textarea 
-            value={texto} 
-            onChange={(e) => setTexto(e.target.value)} 
-            placeholder="Relate o que aconteceu hoje..." 
-            className="textarea" 
-          />
-          
-          <div className="card-tabelas">
-            <h3>📐 Cofragem (m²)</h3>
-            {linhasCofragem.map((l, i) => (
-    <div key={i} className="linha-cofragem">
-      <input className="input-peca" placeholder="Peça (Ex: P1)" value={l.peca} onChange={e => atualizarCampo(i, 'peca', e.target.value)}/>
-      <div className="inputs-medidas">
-        <div className="campo-container">
-          <label>L</label>
-          <input type="number" value={l.largura} onChange={e => atualizarCampo(i, 'largura', e.target.value)} />
-        </div>
-        <div className="campo-container">
-          <label>A</label>
-          <input type="number" value={l.altura} onChange={e => atualizarCampo(i, 'altura', e.target.value)} />
-        </div>
-        <div className="campo-container">
-          <label>C</label>
-          <input type="number" value={l.comprimento} onChange={e => atualizarCampo(i, 'comprimento', e.target.value)} />
-        </div>
-        <button className="btn-remover-linha" onClick={() => removerLinha(i)}>
-          <FaTrash size={14} />
+    <main className="content">
+      {/* INÍCIO DO CARD */}
+      <div className="card">
+        <textarea 
+          value={texto} 
+          onChange={(e) => setTexto(e.target.value)} 
+          placeholder="Relate o que aconteceu hoje..." 
+          className="textarea" 
+        />
+        
+        <div className="card-tabelas">
+          <h3>📐 Cofragem (m²)</h3>
+          {linhasCofragem.map((l, i) => (
+            <div key={i} className="linha-cofragem">
+              <input className="input-peca" placeholder="Peça (Ex: P1)" value={l.peca} onChange={e => atualizarCampo(i, 'cofragem', 'peca', e.target.value)}/>
+              <div className="inputs-medidas">
+                <div className="campo-container">
+                  <label>L</label>
+                  <input type="number" value={l.largura} onChange={e => atualizarCampo(i, 'cofragem', 'largura', e.target.value)} />
+                </div>
+                <div className="campo-container">
+                  <label>A</label>
+                  <input type="number" value={l.altura} onChange={e => atualizarCampo(i, 'cofragem', 'altura', e.target.value)} />
+                </div>
+                <div className="campo-container">
+                  <label>C</label>
+                  <input type="number" value={l.comprimento} onChange={e => atualizarCampo(i, 'cofragem', 'comprimento', e.target.value)} />
+                </div>
+                <button className="btn-remover-linha" onClick={() => removerLinha(i)}>
+                  <FaTrash size={14} />
+                </button>
+              </div>
+            </div>
+          ))}
+          <button onClick={adicionarLinha} className="btn-add">
+            <FaPlus /> Peça
+          </button>
+        </div> {/* Fim da card-tabelas */}
+      </div> {/* <--- AQUI ESTAVA O ERRO: Faltava fechar a div "card" */}
+
+      <div className="acoes">
+        <button onClick={alternarGravacao} className={`icon-btn btn-mic ${gravando ? 'recording' : ''}`}>
+          <FaMicrophone />
         </button>
+        <label className="icon-btn btn-cam">
+          <FaCamera />
+          <input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden />
+        </label>
+        <label className="icon-btn btn-clip">
+          <FaPaperclip />
+          <input type="file" accept="image/*" multiple onChange={handleFoto} hidden />
+        </label>
       </div>
-    </div>
-  ))}
-  <button onClick={adicionarLinha} className="btn-add">
-    <FaPlus /> Peça
-  </button>
-</div>
 
-<div className="acoes">
-  <button onClick={alternarGravacao} className={`icon-btn btn-mic ${gravando ? 'recording' : ''}`}><FaMicrophone /></button>
-  <label className="icon-btn btn-cam"><FaCamera /><input type="file" accept="image/*" capture="environment" onChange={handleFoto} hidden /></label>
-  <label className="icon-btn btn-clip"><FaPaperclip /><input type="file" accept="image/*" multiple onChange={handleFoto} hidden /></label>
-</div>
+      {fotos.length > 0 && (
+        <div className="galeria-preview">
+          {fotos.map((f, i) => (
+            <div key={i} className="foto-item">
+              <img src={f} alt="obra" />
+              <button className="btn-remover-foto" onClick={() => removerFoto(i)}>×</button>
+            </div>
+          ))}
+        </div>
+      )}
 
-{/* Galeria posicionada acima do botão Gerar Relatório */}
-{fotos.length > 0 && (
-  <div className="galeria-preview">
-    {fotos.map((f, i) => (
-      <div key={i} className="foto-item">
-        <img src={f} alt="obra" />
-        <button className="btn-remover-foto" onClick={() => removerFoto(i)}>×</button>
-      </div>
-    ))}
+      <button className="btn-finalizar" onClick={gerarPDF}>
+        <FaRegFilePdf /> Gerar Relatório
+      </button>
+
+      <button onClick={logout} className="btn-sair">
+        <FaSignOutAlt /> Sair
+      </button>
+    </main>
   </div>
-)}
+);
 
-<button className="btn-finalizar">
-  <FaRegFilePdf /> Gerar Relatório
-</button>
-
-<button onClick={logout} className="btn-sair">
-  <FaSignOutAlt /> Sair
-</button>
-      </main>
-    </div>
-  );
-};
+}
 
 // --- EXPORT PRINCIPAL COM PROVIDER ---
 export default function App() {
