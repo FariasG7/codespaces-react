@@ -175,8 +175,14 @@ function MainContent() {
   };
 
   const removerLinha = (index) => {
-    const novaLista = linhasCofragem.filter((_, i) => i !== index);
-    setLinhasCofragem(novaLista);
+    let novaLista;
+    if (linhasCofragem.length > index) {
+      novaLista = linhasCofragem.filter((_, i) => i !== index);
+      setLinhasCofragem(novaLista);
+    } else {
+      novaLista = linhasBetao.filter((_, i) => i !== index);
+      setLinhasBetao(novaLista);
+    } 
   };
 
   const removerFoto = (index) => {
