@@ -208,10 +208,12 @@ function MainContent() {
         />
         
         <div className="card-tabelas">
-          <h3>📐 Cofragem (m²)</h3>
+          <div class='container-alinhado'>
+            <h3>📐 Cofragem (m²)</h3>
                     <button onClick={adicionarLinha} className="btn-add">
             <FaPlus /> Peça
           </button>
+          </div>
           {linhasCofragem.map((l, i) => (
             <div key={i} className="linha-cofragem">
               <input className="input-peca" placeholder="Peça (Ex: P1)" value={l.peca} onChange={e => atualizarCampo(i, 'cofragem', 'peca', e.target.value)}/>

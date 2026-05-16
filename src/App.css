@@ -137,3 +137,14 @@ body {
 .galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; }
 .foto-preview { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; border: 1px solid #333; }
 .btn-sair { background: none; border: none; color: #555; width: 100%; margin-top: 20px; cursor: pointer; }
+
+.container-alinhado {
+  display: flex;       /* Ativa o modo Flexbox */
+  align-items: center; /* Alinha o botão e o texto verticalmente ao centro */
+  gap: 15px;           /* Cria um espaço de 15px entre o h3 e o botão */
+}
+
+/* Opcional: remove as margens padrões do h3 que podem desalinhá-lo */
+.container-alinhado h3 {
+  margin: 0;
+}
