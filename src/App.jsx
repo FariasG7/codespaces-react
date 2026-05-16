@@ -124,6 +124,8 @@ function MainContent() {
   const atualizarCampo = (index, tabela, campo, valor) => {
     const setter = tabela === 'cofragem' ? setLinhasCofragem : setLinhasBetao;
     const lista = tabela === 'cofragem' ? [...linhasCofragem] : [...linhasBetao];
+    const setter = tabela === 'betao' ? setLinhasBetao : setLinhasCofragem;
+    const lista = tabela === 'betao' ? [...linhasBetao] : [...linhasCofragem];
     lista[index][campo] = valor;
     setter(lista);
   };
@@ -162,6 +164,10 @@ function MainContent() {
     // --- FUNÇÕES QUE ESTAVAM FALTANDO ---
   const adicionarLinha = () => {
     setLinhasCofragem([...linhasCofragem, { peca: '', largura: '', altura: '', comprimento: '' }]);
+  };
+
+  const adicionarLinhaBetao = () => {
+    setLinhasBetao([...linhasBetao, { elemento: '', largura: '', altura: '', comprimento: '' }]);
   };
 
   const removerLinha = (index) => {
@@ -217,6 +223,33 @@ function MainContent() {
           ))}
           <button onClick={adicionarLinha} className="btn-add">
             <FaPlus /> Peça
+          </button>
+
+          <h3>🧱 Betão (m³)</h3>
+          {linhasBetao.map((l, i) => (
+            <div key={i} className="linha-betao">
+              <input className="input-elemento" placeholder="Elemento (Ex: E1)" value={l.elemento} onChange={e => atualizarCampo(i, 'betao', 'elemento', e.target.value)}/>
+              <div className="inputs-medidas">
+                <div className="campo-container">
+                  <label>L</label>
+                  <input type="number" value={l.largura} onChange={e => atualizarCampo(i, 'betao', 'largura', e.target.value)} />
+                </div>
+                <div className="campo-container">
+                  <label>A</label>
+                  <input type="number" value={l.altura} onChange={e => atualizarCampo(i, 'betao', 'altura', e.target.value)} />
+                </div>
+                <div className="campo-container">
+                  <label>C</label>
+                  <input type="number" value={l.comprimento} onChange={e => atualizarCampo(i, 'betao', 'comprimento', e.target.value)} />
+                </div>
+                <button className="btn-remover-linha" onClick={() => removerLinha(i)}>
+                  <FaTrash size={14} />
+                </button>
+              </div>
+            </div>
+          ))}
+          <button onClick={adicionarLinhaBetao} className="btn-add">
+            <FaPlus /> Elemento
           </button>
         </div> {/* Fim da card-tabelas */}
       </div> {/* <--- AQUI ESTAVA O ERRO: Faltava fechar a div "card" */}
