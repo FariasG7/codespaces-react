@@ -122,10 +122,14 @@ function MainContent() {
   };
 
   const atualizarCampo = (index, tabela, campo, valor) => {
-    const setter = tabela === 'cofragem' ? setLinhasCofragem : setLinhasBetao;
-    const lista = tabela === 'cofragem' ? [...linhasCofragem] : [...linhasBetao];
-    const setter = tabela === 'betao' ? setLinhasBetao : setLinhasCofragem;
-    const lista = tabela === 'betao' ? [...linhasBetao] : [...linhasCofragem];
+    let setter, lista;
+    if (tabela === 'cofragem') {
+     setter = tabela === 'cofragem' ? setLinhasCofragem : setLinhasBetao;
+     lista = tabela === 'cofragem' ? [...linhasCofragem] : [...linhasBetao];
+    } else {
+     setter = tabela === 'betao' ? setLinhasBetao : setLinhasCofragem;
+     lista = tabela === 'betao' ? [...linhasBetao] : [...linhasCofragem];
+  }
     lista[index][campo] = valor;
     setter(lista);
   };
