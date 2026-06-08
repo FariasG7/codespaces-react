@@ -123,17 +123,17 @@ function MainContent() {
   };
 
   const atualizarCampo = (index, tabela, campo, valor) => {
-    let setter, lista;
-    if (tabela === 'cofragem') {
-     setter = tabela === 'cofragem' ? setLinhasCofragem : setLinhasBetao;
-     lista = tabela === 'cofragem' ? [...linhasCofragem] : [...linhasBetao];
-    } else {
-     setter = tabela === 'betao' ? setLinhasBetao : setLinhasCofragem;
-     lista = tabela === 'betao' ? [...linhasBetao] : [...linhasCofragem];
+  if (tabela === 'cofragem') {
+    const novaLista = [...linhasCofragem];
+    novaLista[index][campo] = valor;
+    setLinhasCofragem(novaLista);
+  } else if (tabela === 'betao') {
+    const novaLista = [...linhasBetao];
+    novaLista[index][campo] = valor;
+    setLinhasBetao(novaLista);
   }
-    lista[index][campo] = valor;
-    setter(lista);
-  };
+};
+
 
 const gerarPDF = () => {
   try {
