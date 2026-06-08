@@ -135,39 +135,41 @@ function MainContent() {
     setter(lista);
   };
 
-  const gerarPDF = () => {
-    try {
-      const doc = new jsPDF();
-      const largura = doc.internal.pageSize.getWidth();
-      
-      // Cabeçalho Simples
-      doc.setFontSize(18);
-      doc.text("RELATÓRIO DIÁRIO DE OBRA", 15, 20);
-      doc.setFontSize(10);
-      doc.text(`Data: ${new Date().toLocaleDateString()}`, largura - 15, 15, { align: 'right' });
-      doc.text(`Clima: ${clima.replace(/[^\x00-\x7F]/g, "")}`, largura - 15, 22, { align: 'right' });
-      doc.line(15, 28, largura - 15, 28);
+const gerarPDF = () => {
+  try {
+    setStatus("⏳ Gerando PDF...");
+    const doc = new jsPDF();
+    const largura = doc.internal.pageSize.getWidth();
+    
+    // --- CABEÇALHO ---
+    doc.setFontSize(18);
+    doc.text("RELATÓRIO DIÁRIO DE OBRA", 15, 20);
+    doc.setFontSize(10);
+    doc.text(`Data: ${new Date().toLocaleDateString()}`, largura - 15, 15, { align: 'right' });
+    
+    // Limpa emojis do clima para evitar erros de caracteres no jsPDF
+    const climaLimpo = clima ? clima.replace(/[^\x00-\x7F]/g, "").trim() : "Nao informado";
+    doc.text(`Clima: ${climaLimpo}`, largura - 15, 22, { align: 'right' });
+    doc.line(15, 28, largura - 15, 28);
 
-      // Relato
-      doc.setFontSize(12);
-      doc.setTextColor(0, 102, 204);
-      doc.text("RELATO:", 15, 38);
-      doc.setTextColor(0);
-      const textSplit = doc.splitTextToSize(texto || "Sem relato informado.", largura - 30);
-      doc.text(textSplit, 15, 45);
+    // --- RELATO (TEXTO) ---
+    doc.setFontSize(12);
+    doc.setTextColor(0, 102, 204); // Azul
+    doc.text("RELATO:", 15, 38);
+    doc.setTextColor(0); // Volta para o preto
+    
+    const relatoTexto = texto && texto.trim() !== "" ? texto : "Sem relato informado.";
+    const textSplit = doc.splitTextToSize(relatoTexto, largura - 30);
+    doc.text(textSplit, 15, 45);
 
-      // Tabelas e Fotos (Lógica simplificada para brevidade)
-
-
-          // O jsPDF calcula dinamicamente onde o texto terminou para sabermos onde começar as tabelas
-    let yAtual = doc.lastAutoTable ? doc.lastAutoTable.finalY + 15 : 45 + (textSplit.length * 7) + 10;
+    // CÁLCULO SEGURO DO Y: Descobre onde o texto terminou para não atropelar
+    let yAtual = 45 + (textSplit.length * 7) + 15;
 
     // --- TABELA 1: COFRAGEM ---
     doc.setFontSize(12);
     doc.setTextColor(0, 102, 204);
     doc.text("COFRAGEM (m2)", 15, yAtual);
     
-    // Mapeia os dados do estado para o formato que o AutoTable aceita [Linhas][Colunas]
     const dadosCofragem = linhasCofragem.map(l => [
       l.peca || '-', 
       l.largura || '0', 
@@ -175,16 +177,17 @@ function MainContent() {
       l.comprimento || '0'
     ]);
 
+    // Chamada oficial do AutoTable
     doc.autoTable({
-      startY: yAtual + 3,
+      startY: yAtual + 5,
       head: [['Peca', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
       body: dadosCofragem,
       styles: { halign: 'center' },
-      headStyles: { fillColor: [0, 102, 204] }, // Cabeçalho azul
+      headStyles: { fillColor: [0, 102, 204] },
       theme: 'grid'
     });
 
-    // Atualiza a posição Y baseada no fim da tabela de cofragem
+    // Pegamos o final da tabela anterior direto do objeto retornado pelo plugin
     yAtual = doc.lastAutoTable.finalY + 15;
 
     // --- TABELA 2: BETÃO ---
@@ -200,26 +203,22 @@ function MainContent() {
     ]);
 
     doc.autoTable({
-      startY: yAtual + 3,
+      startY: yAtual + 5,
       head: [['Elemento', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
       body: dadosBetao,
       styles: { halign: 'center' },
-      headStyles: { fillColor: [40, 167, 69] }, // Cabeçalho verde para diferenciar, ou mantenha azul [0, 102, 204]
+      headStyles: { fillColor: [40, 167, 69] }, // Verde para destacar o Betão
       theme: 'grid'
     });
 
-    // --- FOTOS (OPCIONAL) ---
-    // Se quiser adicionar as fotos logo abaixo no futuro:
-    // yAtual = doc.lastAutoTable.finalY + 15;
-    // ... lógica de doc.addImage
-      // ... (Mantenha sua lógica de loop de tabelas aqui)
-
-      doc.save(`Relatorio_${Date.now()}.pdf`);
-      setStatus("✅ PDF Pronto!");
-    } catch (err) {
-      setStatus("❌ Erro no PDF");
-    }
-  };
+    // --- SALVAR ---
+    doc.save(`Relatorio_${Date.now()}.pdf`);
+    setStatus("✅ PDF Pronto!");
+  } catch (err) {
+    console.error("Erro detalhado do PDF:", err);
+    setStatus("❌ Erro no PDF");
+  }
+};
 
     // --- FUNÇÕES QUE ESTAVAM FALTANDO ---
   const adicionarLinha = () => {
