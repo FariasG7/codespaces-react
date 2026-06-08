@@ -156,6 +156,61 @@ function MainContent() {
       doc.text(textSplit, 15, 45);
 
       // Tabelas e Fotos (Lógica simplificada para brevidade)
+
+
+          // O jsPDF calcula dinamicamente onde o texto terminou para sabermos onde começar as tabelas
+    let yAtual = doc.lastAutoTable ? doc.lastAutoTable.finalY + 15 : 45 + (textSplit.length * 7) + 10;
+
+    // --- TABELA 1: COFRAGEM ---
+    doc.setFontSize(12);
+    doc.setTextColor(0, 102, 204);
+    doc.text("COFRAGEM (m2)", 15, yAtual);
+    
+    // Mapeia os dados do estado para o formato que o AutoTable aceita [Linhas][Colunas]
+    const dadosCofragem = linhasCofragem.map(l => [
+      l.peca || '-', 
+      l.largura || '0', 
+      l.altura || '0', 
+      l.comprimento || '0'
+    ]);
+
+    doc.autoTable({
+      startY: yAtual + 3,
+      head: [['Peca', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
+      body: dadosCofragem,
+      styles: { halign: 'center' },
+      headStyles: { fillColor: [0, 102, 204] }, // Cabeçalho azul
+      theme: 'grid'
+    });
+
+    // Atualiza a posição Y baseada no fim da tabela de cofragem
+    yAtual = doc.lastAutoTable.finalY + 15;
+
+    // --- TABELA 2: BETÃO ---
+    doc.setFontSize(12);
+    doc.setTextColor(0, 102, 204);
+    doc.text("BETAO (m3)", 15, yAtual);
+
+    const dadosBetao = linhasBetao.map(l => [
+      l.elemento || '-', 
+      l.largura || '0', 
+      l.altura || '0', 
+      l.comprimento || '0'
+    ]);
+
+    doc.autoTable({
+      startY: yAtual + 3,
+      head: [['Elemento', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
+      body: dadosBetao,
+      styles: { halign: 'center' },
+      headStyles: { fillColor: [40, 167, 69] }, // Cabeçalho verde para diferenciar, ou mantenha azul [0, 102, 204]
+      theme: 'grid'
+    });
+
+    // --- FOTOS (OPCIONAL) ---
+    // Se quiser adicionar as fotos logo abaixo no futuro:
+    // yAtual = doc.lastAutoTable.finalY + 15;
+    // ... lógica de doc.addImage
       // ... (Mantenha sua lógica de loop de tabelas aqui)
 
       doc.save(`Relatorio_${Date.now()}.pdf`);
