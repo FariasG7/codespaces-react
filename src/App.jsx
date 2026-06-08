@@ -135,6 +135,7 @@ function MainContent() {
 };
 
 
+/* 
 const gerarPDF = () => {
   try {
     setStatus("⏳ Gerando PDF...");
@@ -219,6 +220,111 @@ const gerarPDF = () => {
     setStatus("❌ Erro no PDF");
   }
 };
+*/
+
+
+  const gerarPDF = () => {
+  try {
+    setStatus("⏳ Gerando PDF...");
+    console.log("Iniciando geração do PDF...");
+    
+    // 1. Inicializar o documento
+    const doc = new jsPDF();
+    const largura = doc.internal.pageSize.getWidth();
+    
+    // 2. Cabeçalho
+    doc.setFontSize(18);
+    doc.text("RELATÓRIO DIÁRIO DE OBRA", 15, 20);
+    doc.setFontSize(10);
+    doc.text(`Data: ${new Date().toLocaleDateString()}`, largura - 15, 15, { align: 'right' });
+    
+    // Tratamento seguro do clima para evitar erros de caracteres no iPad/Safari
+    const climaLimpo = clima ? clima.replace(/[^\x00-\x7F]/g, "").trim() : "Nao informado";
+    doc.text(`Clima: ${climaLimpo}`, largura - 15, 22, { align: 'right' });
+    doc.line(15, 28, largura - 15, 28);
+
+    // 3. Relato de Texto
+    doc.setFontSize(12);
+    doc.setTextColor(0, 102, 204);
+    doc.text("RELATO:", 15, 38);
+    doc.setTextColor(0);
+    
+    const relatoTexto = texto && texto.trim() !== "" ? texto : "Sem relato informado.";
+    const textSplit = doc.splitTextToSize(relatoTexto, largura - 30);
+    doc.text(textSplit, 15, 45);
+
+    // Cálculo da posição vertical inicial para as tabelas
+    let yAtual = 45 + (textSplit.length * 7) + 15;
+
+    // 4. Renderizar Tabela de Cofragem
+    try {
+      doc.setFontSize(12);
+      doc.setTextColor(0, 102, 204);
+      doc.text("COFRAGEM (m2)", 15, yAtual);
+      
+      const dadosCofragem = linhasCofragem.map(l => [
+        l.peca || '-', 
+        l.largura || '0', 
+        l.altura || '0', 
+        l.comprimento || '0'
+      ]);
+
+      doc.autoTable({
+        startY: yAtual + 5,
+        head: [['Peca', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
+        body: dadosCofragem,
+        styles: { halign: 'center' },
+        headStyles: { fillColor: [0, 102, 204] },
+        theme: 'grid'
+      });
+      
+      yAtual = doc.lastAutoTable.finalY + 15;
+    } catch (erroCofragem) {
+      console.error("Erro na tabela de Cofragem:", erroCofragem);
+      alert("Erro ao estruturar dados de Cofragem no PDF: " + erroCofragem.message);
+      throw erroCofragem;
+    }
+
+    // 5. Renderizar Tabela de Betão
+    try {
+      doc.setFontSize(12);
+      doc.setTextColor(0, 102, 204);
+      doc.text("BETAO (m3)", 15, yAtual);
+
+      const dadosBetao = linhasBetao.map(l => [
+        l.elemento || '-', 
+        l.largura || '0', 
+        l.altura || '0', 
+        l.comprimento || '0'
+      ]);
+
+      doc.autoTable({
+        startY: yAtual + 5,
+        head: [['Elemento', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
+        body: dadosBetao,
+        styles: { halign: 'center' },
+        headStyles: { fillColor: [40, 167, 69] },
+        theme: 'grid'
+      });
+    } catch (erroBetao) {
+      console.error("Erro na tabela de Betao:", erroBetao);
+      alert("Erro ao estruturar dados de Betao no PDF: " + erroBetao.message);
+      throw erroBetao;
+    }
+
+    // 6. Salvar o arquivo
+    console.log("Salvando arquivo PDF...");
+    doc.save(`Relatorio_${Date.now()}.pdf`);
+    setStatus("✅ PDF Pronto!");
+    alert("PDF gerado e baixado com sucesso!");
+
+  } catch (err) {
+    console.error("Erro geral no PDF:", err);
+    setStatus("❌ Erro no PDF");
+    alert("Falha geral ao gerar PDF: " + err.message);
+  }
+};
+
 
     // --- FUNÇÕES QUE ESTAVAM FALTANDO ---
   const adicionarLinha = () => {
