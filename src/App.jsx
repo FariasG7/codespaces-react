@@ -334,6 +334,52 @@ autoTable(doc, {
       throw erroBetao;
     }
 
+        // --- NOVO BLOCO: ANEXOS FOTOGRÁFICOS ---
+    if (fotos && fotos.length > 0) {
+      doc.setFontSize(12);
+      doc.setTextColor(0, 102, 204);
+      
+      // Se restou pouco espaço na página atual, pula para a próxima para pôr as fotos
+      if (yAtual > alturaPagina - 60) {
+        doc.addPage();
+        yAtual = 20;
+      }
+      
+      doc.text("REGISTROS FOTOGRÁFICOS:", 15, yAtual);
+      yAtual += 8;
+
+      const largFoto = 55;   // Largura da foto no PDF (em mm)
+      const altFoto = 45;    // Altura da foto no PDF (em mm)
+      const espacamento = 7; // Espaço entre as fotos
+      let xAtual = 15;
+
+      fotos.forEach((fotoBase64, index) => {
+        // Verifica se a foto cabe na altura restante da página atual
+        if (yAtual + altFoto > alturaPagina - 20) {
+          doc.addPage();
+          yAtual = 20;
+          xAtual = 15;
+        }
+
+        try {
+          // Adiciona a imagem usando o formato JPEG/PNG padrão comprimido
+          doc.addImage(fotoBase64, 'JPEG', xAtual, yAtual, largFoto, altFoto);
+        } catch (e) {
+          console.error("Erro ao renderizar imagem individual no PDF", e);
+        }
+
+        // Move a coordenada X para a próxima coluna
+        xAtual += largFoto + espacamento;
+
+        // Se a próxima foto ultrapassar a largura útil da página (3 fotos por linha), quebra a linha
+        if (xAtual + largFoto > largura - 15) {
+          xAtual = 15;
+          yAtual += altFoto + espacamento;
+        }
+      });
+    }
+
+
     // 6. Salvar o arquivo
     console.log("Salvando arquivo PDF...");
     doc.save(`Relatorio_${Date.now()}.pdf`);
