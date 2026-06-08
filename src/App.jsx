@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { jsPDF } from "jspdf";
-import ' jsPDF-autotable';
+import './jsPDF-autotable';
 import './App.css';
 import { FaMicrophone, FaCamera, FaPaperclip, FaRegFilePdf, FaPlus, FaSignOutAlt, FaTrash } from 'react-icons/fa';
 import { AuthProvider, useAuth } from './context/AuthContext';
