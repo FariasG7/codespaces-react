@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { jsPDF } from "jspdf";
-import 'jspdf-autotable';
+import autoTable from "jspdf-autotable"; // <--- Importa a função diretamente
 import './App.css';
 import { FaMicrophone, FaCamera, FaPaperclip, FaRegFilePdf, FaPlus, FaSignOutAlt, FaTrash } from 'react-icons/fa';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -268,7 +268,7 @@ const gerarPDF = () => {
         l.altura || '0', 
         l.comprimento || '0'
       ]);
-
+/*
       doc.autoTable({
         startY: yAtual + 5,
         head: [['Peca', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
@@ -277,7 +277,18 @@ const gerarPDF = () => {
         headStyles: { fillColor: [0, 102, 204] },
         theme: 'grid'
       });
-      
+      */
+     // Substitua o doc.autoTable por:
+autoTable(doc, {
+  startY: yAtual + 5,
+  head: [['Peca', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
+  body: dadosCofragem,
+  styles: { halign: 'center' },
+  headStyles: { fillColor: [0, 102, 204] },
+  theme: 'grid'
+});
+
+
       yAtual = doc.lastAutoTable.finalY + 15;
     } catch (erroCofragem) {
       console.error("Erro na tabela de Cofragem:", erroCofragem);
@@ -298,7 +309,7 @@ const gerarPDF = () => {
         l.comprimento || '0'
       ]);
 
-      doc.autoTable({
+   /*   doc.autoTable({
         startY: yAtual + 5,
         head: [['Elemento', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
         body: dadosBetao,
@@ -306,6 +317,17 @@ const gerarPDF = () => {
         headStyles: { fillColor: [40, 167, 69] },
         theme: 'grid'
       });
+      */
+     // Substitua o doc.autoTable por:
+autoTable(doc, {
+  startY: yAtual + 5,
+  head: [['Elemento', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
+  body: dadosBetao,
+  styles: { halign: 'center' },
+  headStyles: { fillColor: [40, 167, 69] },
+  theme: 'grid'
+});
+
     } catch (erroBetao) {
       console.error("Erro na tabela de Betao:", erroBetao);
       alert("Erro ao estruturar dados de Betao no PDF: " + erroBetao.message);
