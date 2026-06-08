@@ -211,7 +211,7 @@ function MainContent() {
           <div class='container-alinhado'>
             <h3>📐 Cofragem (m²)</h3>
                     <button onClick={adicionarLinha} className="btn-add">
-            <FaPlus /> Peça
+            <FaPlus />
           </button>
           </div>
           {linhasCofragem.map((l, i) => (
@@ -237,8 +237,12 @@ function MainContent() {
             </div>
           ))}
         
-
+        <div class='container-alinhado'>
           <h3>🧱 Betão (m³)</h3>
+                    <button onClick={adicionarLinhaBetao} className="btn-add">
+            <FaPlus />
+          </button> 
+          </div>
           {linhasBetao.map((l, i) => (
             <div key={i} className="linha-betao">
               <input className="input-elemento" placeholder="Elemento (Ex: E1)" value={l.elemento} onChange={e => atualizarCampo(i, 'betao', 'elemento', e.target.value)}/>
@@ -261,9 +265,6 @@ function MainContent() {
               </div>
             </div>
           ))}
-          <button onClick={adicionarLinhaBetao} className="btn-add">
-            <FaPlus /> Elemento
-          </button>
         </div> {/* Fim da card-tabelas */}
       </div> {/* <--- AQUI ESTAVA O ERRO: Faltava fechar a div "card" */}
 
