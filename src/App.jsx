@@ -231,6 +231,7 @@ const gerarPDF = () => {
     // 1. Inicializar o documento
     const doc = new jsPDF();
     const largura = doc.internal.pageSize.getWidth();
+    const alturaPagina = doc.internal.pageSize.getHeight();
     
     // 2. Cabeçalho
     doc.setFontSize(18);
@@ -327,6 +328,8 @@ autoTable(doc, {
   headStyles: { fillColor: [40, 167, 69] },
   theme: 'grid'
 });
+
+yAtual = doc.lastAutoTable.finalY + 15;
 
     } catch (erroBetao) {
       console.error("Erro na tabela de Betao:", erroBetao);
