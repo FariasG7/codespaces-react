@@ -122,19 +122,6 @@ function MainContent() {
     });
   };
 
- /* const atualizarCampo = (index, tabela, campo, valor) => {
-  if (tabela === 'cofragem') {
-    const novaLista = [...linhasCofragem];
-    novaLista[index][campo] = valor;
-    setLinhasCofragem(novaLista);
-  } else if (tabela === 'betao') {
-    const novaLista = [...linhasBetao];
-    novaLista[index][campo] = valor;
-    setLinhasBetao(novaLista);
-  }
-};
-  */
-
   const atualizarCampo = (index, tabela, campo, valor) => {
   if (tabela === 'cofragem') {
     setLinhasCofragem(prev => 
@@ -194,18 +181,8 @@ function MainContent() {
         l.altura || '0', 
         l.comprimento || '0'
       ]);
-/*
-      doc.autoTable({
-        startY: yAtual + 5,
-        head: [['Peca', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
-        body: dadosCofragem,
-        styles: { halign: 'center' },
-        headStyles: { fillColor: [0, 102, 204] },
-        theme: 'grid'
-      });
-      */
-     // Substitua o doc.autoTable por:
-autoTable(doc, {
+
+      autoTable(doc, {
   startY: yAtual + 5,
   head: [['Peca', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
   body: dadosCofragem,
@@ -235,17 +212,7 @@ autoTable(doc, {
         l.comprimento || '0'
       ]);
 
-   /*   doc.autoTable({
-        startY: yAtual + 5,
-        head: [['Elemento', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
-        body: dadosBetao,
-        styles: { halign: 'center' },
-        headStyles: { fillColor: [40, 167, 69] },
-        theme: 'grid'
-      });
-      */
-     // Substitua o doc.autoTable por:
-autoTable(doc, {
+      autoTable(doc, {
   startY: yAtual + 5,
   head: [['Elemento', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
   body: dadosBetao,
