@@ -122,7 +122,7 @@ function MainContent() {
     });
   };
 
-  const atualizarCampo = (index, tabela, campo, valor) => {
+ /* const atualizarCampo = (index, tabela, campo, valor) => {
   if (tabela === 'cofragem') {
     const novaLista = [...linhasCofragem];
     novaLista[index][campo] = valor;
@@ -133,6 +133,20 @@ function MainContent() {
     setLinhasBetao(novaLista);
   }
 };
+  */
+
+  const atualizarCampo = (index, tabela, campo, valor) => {
+  if (tabela === 'cofragem') {
+    setLinhasCofragem(prev => 
+      prev.map((linha, idx) => idx === index ? { ...linha, [campo]: valor } : linha)
+    );
+  } else if (tabela === 'betao') {
+    setLinhasBetao(prev => 
+      prev.map((linha, idx) => idx === index ? { ...linha, [campo]: valor } : linha)
+    );
+  }
+};
+
 
   const gerarPDF = () => {
   try {
