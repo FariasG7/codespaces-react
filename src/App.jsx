@@ -240,9 +240,14 @@ const gerarPDF = () => {
     doc.text(`Data: ${new Date().toLocaleDateString()}`, largura - 15, 15, { align: 'right' });
     
     // Tratamento seguro do clima para evitar erros de caracteres no iPad/Safari
-   /* const climaLimpo = clima ? clima.replace(/[^\x00-\x7F]/g, "").trim() : "Nao informado";*/
-    doc.text(`Clima: ${climaLimpo}`, largura - 15, 22, { align: 'right' });
-    doc.line(15, 28, largura - 15, 28);
+// Aceita caracteres ASCII e também o bloco Latino Suplementar (acentos comuns)
+const climaLimpo = clima 
+    ? clima.replace(/[^\x00-\x7F\u00C0-\u00FF]/g, "").trim() 
+    : "Nao informado";
+
+doc.text(`Clima: ${climaLimpo}`, largura - 15, 22, { align: 'right' });
+doc.line(15, 28, largura - 15, 28);
+
 
     // 3. Relato de Texto
     doc.setFontSize(12);
