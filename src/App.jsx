@@ -122,7 +122,7 @@ function MainContent() {
     });
   };
 
-  const atualizarCampo = (index, tabela, campo, valor) => {
+ /* const atualizarCampo = (index, tabela, campo, valor) => {
   if (tabela === 'cofragem') {
     const novaLista = [...linhasCofragem];
     novaLista[index][campo] = valor;
@@ -133,94 +133,19 @@ function MainContent() {
     setLinhasBetao(novaLista);
   }
 };
+  */
 
-
-/* 
-const gerarPDF = () => {
-  try {
-    setStatus("⏳ Gerando PDF...");
-    const doc = new jsPDF();
-    const largura = doc.internal.pageSize.getWidth();
-    
-    // --- CABEÇALHO ---
-    doc.setFontSize(18);
-    doc.text("RELATÓRIO DIÁRIO DE OBRA", 15, 20);
-    doc.setFontSize(10);
-    doc.text(`Data: ${new Date().toLocaleDateString()}`, largura - 15, 15, { align: 'right' });
-    
-    // Limpa emojis do clima para evitar erros de caracteres no jsPDF
-    const climaLimpo = clima ? clima.replace(/[^\x00-\x7F]/g, "").trim() : "Nao informado";
-    doc.text(`Clima: ${climaLimpo}`, largura - 15, 22, { align: 'right' });
-    doc.line(15, 28, largura - 15, 28);
-
-    // --- RELATO (TEXTO) ---
-    doc.setFontSize(12);
-    doc.setTextColor(0, 102, 204); // Azul
-    doc.text("RELATO:", 15, 38);
-    doc.setTextColor(0); // Volta para o preto
-    
-    const relatoTexto = texto && texto.trim() !== "" ? texto : "Sem relato informado.";
-    const textSplit = doc.splitTextToSize(relatoTexto, largura - 30);
-    doc.text(textSplit, 15, 45);
-
-    // CÁLCULO SEGURO DO Y: Descobre onde o texto terminou para não atropelar
-    let yAtual = 45 + (textSplit.length * 7) + 15;
-
-    // --- TABELA 1: COFRAGEM ---
-    doc.setFontSize(12);
-    doc.setTextColor(0, 102, 204);
-    doc.text("COFRAGEM (m2)", 15, yAtual);
-    
-    const dadosCofragem = linhasCofragem.map(l => [
-      l.peca || '-', 
-      l.largura || '0', 
-      l.altura || '0', 
-      l.comprimento || '0'
-    ]);
-
-    // Chamada oficial do AutoTable
-    doc.autoTable({
-      startY: yAtual + 5,
-      head: [['Peca', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
-      body: dadosCofragem,
-      styles: { halign: 'center' },
-      headStyles: { fillColor: [0, 102, 204] },
-      theme: 'grid'
-    });
-
-    // Pegamos o final da tabela anterior direto do objeto retornado pelo plugin
-    yAtual = doc.lastAutoTable.finalY + 15;
-
-    // --- TABELA 2: BETÃO ---
-    doc.setFontSize(12);
-    doc.setTextColor(0, 102, 204);
-    doc.text("BETAO (m3)", 15, yAtual);
-
-    const dadosBetao = linhasBetao.map(l => [
-      l.elemento || '-', 
-      l.largura || '0', 
-      l.altura || '0', 
-      l.comprimento || '0'
-    ]);
-
-    doc.autoTable({
-      startY: yAtual + 5,
-      head: [['Elemento', 'Largura (m)', 'Altura (m)', 'Comprimento (m)']],
-      body: dadosBetao,
-      styles: { halign: 'center' },
-      headStyles: { fillColor: [40, 167, 69] }, // Verde para destacar o Betão
-      theme: 'grid'
-    });
-
-    // --- SALVAR ---
-    doc.save(`Relatorio_${Date.now()}.pdf`);
-    setStatus("✅ PDF Pronto!");
-  } catch (err) {
-    console.error("Erro detalhado do PDF:", err);
-    setStatus("❌ Erro no PDF");
+  const atualizarCampo = (index, tabela, campo, valor) => {
+  if (tabela === 'cofragem') {
+    setLinhasCofragem(prev => 
+      prev.map((linha, idx) => idx === index ? { ...linha, [campo]: valor } : linha)
+    );
+  } else if (tabela === 'betao') {
+    setLinhasBetao(prev => 
+      prev.map((linha, idx) => idx === index ? { ...linha, [campo]: valor } : linha)
+    );
   }
 };
-*/
 
 
   const gerarPDF = () => {
@@ -240,9 +165,20 @@ const gerarPDF = () => {
     doc.text(`Data: ${new Date().toLocaleDateString()}`, largura - 15, 15, { align: 'right' });
     
     // Tratamento seguro do clima para evitar erros de caracteres no iPad/Safari
+<<<<<<< HEAD
    const climaLimpo = clima ? clima.replace(/[^\x00-\x7F]/g, "").trim() : "Nao informado";
     doc.text(`Clima: ${climaLimpo}`, largura - 15, 22, { align: 'right' });
     doc.line(15, 28, largura - 15, 28);
+=======
+// Aceita caracteres ASCII e também o bloco Latino Suplementar (acentos comuns)
+const climaLimpo = clima 
+    ? clima.replace(/[^\x00-\x7F\u00C0-\u00FF]/g, "").trim() 
+    : "Nao informado";
+
+doc.text(`Clima: ${climaLimpo}`, largura - 15, 22, { align: 'right' });
+doc.line(15, 28, largura - 15, 28);
+
+>>>>>>> e75958775f7c3d330b134ab17e305acdfac1e837
 
     // 3. Relato de Texto
     doc.setFontSize(12);
